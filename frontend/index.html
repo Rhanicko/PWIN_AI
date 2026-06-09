@@ -1,0 +1,2234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#020810" />
+  <meta name="color-scheme" content="dark" />
+  <title>PWIN AI — Philippine Weather Intelligence Network</title>
+  <meta name="description" content="Next-generation AI-powered weather intelligence for the Philippines — live, province-level monitoring for all 17 regions and 82 provinces." />
+  <!-- Social / link previews -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="PWIN AI — Philippine Weather Intelligence Network" />
+  <meta property="og:description" content="Live AI-powered, province-level weather intelligence for the Philippines." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%232563eb'/%3E%3Cstop offset='1' stop-color='%237c3aed'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='4' y='4' width='56' height='56' rx='16' fill='url(%23g)'/%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M32 14a18 18 0 1 0 18 18'/%3E%3Cpath d='M32 22a10 10 0 1 0 10 10'/%3E%3Cpath d='M32 32 50 14'/%3E%3C/g%3E%3Ccircle cx='32' cy='32' r='3.2' fill='%23ffffff'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <style>
+/* ══════════════════════════════════════════════════════════════════════
+   PWIN AI 2.0 · Ultra-Premium Philippine Weather Intelligence Platform
+   Design: Liquid Glass × Sci-Fi Command Center × iOS 26 Spatial
+   ══════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --c-void:    #020810;
+  --c-abyss:   #050D1C;
+  --c-deep:    #081526;
+  --c-surface: #0C1D38;
+  --c-blue:    #2563EB;
+  --c-blue-lt: #3B82F6;
+  --c-sky:     #0EA5E9;
+  --c-cyan:    #06B6D4;
+  --c-arctic:  #22D3EE;
+  --c-violet:  #7C3AED;
+  --c-aurora:  #8B5CF6;
+  --c-indigo:  #6366F1;
+  --c-teal:    #14B8A6;
+  --c-emerald: #10B981;
+  --s-info:     #0EA5E9;
+  --s-advisory: #10B981;
+  --s-watch:    #F59E0B;
+  --s-warning:  #F97316;
+  --s-critical: #EF4444;
+  --t-hi:    #F2F8FF;
+  --t-mid:   #B8D0EE;
+  --t-lo:    #6A87A8;
+  --t-faint: #334966;
+  /* backward-compat */
+  --glass:        rgba(8,16,38,0.86);
+  --glass-2:      rgba(6,12,30,0.90);
+  --glass-3:      rgba(5,10,25,0.94);
+  --glass-border: rgba(255,255,255,0.09);
+  --hairline:     rgba(255,255,255,0.06);
+  --hairline-2:   rgba(255,255,255,0.13);
+  --shadow-sm: 0 4px 16px rgba(0,0,0,0.45);
+  --shadow:    0 16px 48px rgba(0,0,0,0.60);
+  --shadow-lg: 0 28px 72px rgba(0,0,0,0.72);
+  --radius:    24px;
+  --radius-sm: 16px;
+  --blur:      40px;
+  --font:    'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --mono:    'JetBrains Mono', monospace;
+  --display: 'Syne', sans-serif;
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;color:var(--t-hi);font-family:var(--font);background:var(--c-void);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:9999px}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.2)}
+*{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.1) transparent}
+.hidden{display:none!important}
+.muted{color:var(--t-lo)}
+/* Keyboard accessibility — visible focus ring for tab navigation */
+:focus-visible{outline:2px solid var(--c-sky);outline-offset:2px;border-radius:6px}
+.bm:focus-visible,.tab:focus-visible,.pl-item:focus-visible,.filter:focus-visible{outline-offset:1px}
+.small{font-size:11px}
+.empty-note{padding:24px;text-align:center;color:var(--t-lo);font-size:13px}
+
+/* ── Atmospheric background ── */
+.bg-glow{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:linear-gradient(170deg,#020810 0%,#050D1C 45%,#030A16 75%,#020810 100%);
+  transition:background 2.5s ease}
+body[data-weather="stormy"] .bg-glow{background:linear-gradient(170deg,#04061A 0%,#0A0720 45%,#050424 75%,#04061A 100%)}
+body[data-weather="rainy"]  .bg-glow{background:linear-gradient(170deg,#030A1C 0%,#060F22 45%,#040C1A 75%,#030A1C 100%)}
+body[data-weather="clear"]  .bg-glow{background:linear-gradient(170deg,#020C1E 0%,#061120 45%,#040E1C 75%,#020C1E 100%)}
+
+.atm-layer{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.atm-orb{position:absolute;border-radius:50%;will-change:transform}
+.atm-orb-1{width:75vw;height:65vh;top:-25vh;left:-15vw;background:radial-gradient(circle,rgba(37,99,235,.25) 0%,rgba(37,99,235,.05) 45%,transparent 70%);filter:blur(85px);animation:orb1 22s ease-in-out infinite alternate}
+.atm-orb-2{width:60vw;height:60vh;top:-18vh;right:-18vw;background:radial-gradient(circle,rgba(124,58,237,.20) 0%,rgba(99,102,241,.05) 45%,transparent 70%);filter:blur(95px);animation:orb2 28s ease-in-out infinite alternate}
+.atm-orb-3{width:90vw;height:45vh;bottom:-10vh;left:5vw;background:radial-gradient(circle,rgba(6,182,212,.12) 0%,transparent 62%);filter:blur(110px);animation:orb3 35s ease-in-out infinite alternate}
+.atm-orb-4{width:50vw;height:55vh;bottom:5vh;right:-5vw;background:radial-gradient(circle,rgba(16,185,129,.08) 0%,transparent 60%);filter:blur(90px);animation:orb4 26s ease-in-out infinite alternate}
+@keyframes orb1{from{transform:translate(0,0) scale(1)}to{transform:translate(6vw,4vh) scale(1.16)}}
+@keyframes orb2{from{transform:translate(0,0) scale(1.08)}to{transform:translate(-5vw,6vh) scale(0.88)}}
+@keyframes orb3{from{transform:translate(0,0) scale(1)}to{transform:translate(-4vw,-3vh) scale(1.11)}}
+@keyframes orb4{from{transform:translate(0,0) scale(0.9)}to{transform:translate(4vw,-5vh) scale(1.14)}}
+body[data-weather="stormy"] .atm-orb-1{background:radial-gradient(circle,rgba(99,102,241,.38) 0%,transparent 65%)}
+body[data-weather="stormy"] .atm-orb-2{background:radial-gradient(circle,rgba(124,58,237,.32) 0%,transparent 60%)}
+body[data-weather="rainy"]  .atm-orb-1{background:radial-gradient(circle,rgba(37,99,235,.32) 0%,transparent 68%)}
+body[data-weather="clear"]  .atm-orb-3{background:radial-gradient(circle,rgba(251,191,36,.07) 0%,transparent 60%)}
+
+.bg-grid{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background-image:linear-gradient(rgba(100,160,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(100,160,255,.018) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(ellipse 90% 80% at 50% 50%,rgba(0,0,0,1) 20%,transparent 100%)}
+.bg-vignette{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse 130% 130% at 50% 50%,transparent 42%,rgba(2,8,16,.68) 100%)}
+
+#particleCanvas,#rainCanvas{position:fixed;inset:0;pointer-events:none}
+#particleCanvas{z-index:1}
+#rainCanvas{z-index:2;opacity:0;transition:opacity 1.6s}
+body[data-weather="rainy"]  #rainCanvas{opacity:.6}
+body[data-weather="stormy"] #rainCanvas{opacity:1}
+
+.rainfx{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:0;transition:opacity 1.5s;
+  background:repeating-linear-gradient(-65deg,transparent,transparent 4px,rgba(147,210,255,.036) 4px,rgba(147,210,255,.036) 5px);
+  animation:rainfall .65s linear infinite}
+@keyframes rainfall{from{background-position:0 0}to{background-position:-32px 300px}}
+body[data-weather="rainy"]  .rainfx{opacity:1}
+body[data-weather="stormy"] .rainfx{opacity:1;animation-duration:.3s}
+.sunfx{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:0;transition:opacity 2s;
+  background:radial-gradient(ellipse 55% 65% at 82% 6%,rgba(253,224,71,.13),transparent 65%);
+  animation:sunPulse 10s ease-in-out infinite}
+@keyframes sunPulse{0%,100%{opacity:0;transform:scale(1)}40%,60%{opacity:1;transform:scale(1.04)}}
+body[data-weather="clear"] .sunfx{opacity:1}
+
+/* ── Liquid Glass System ── */
+.glass{
+  background:linear-gradient(152deg,rgba(9,20,50,.88) 0%,rgba(5,11,28,.93) 55%,rgba(7,15,36,.88) 100%);
+  backdrop-filter:blur(var(--blur)) saturate(190%) brightness(1.07);
+  -webkit-backdrop-filter:blur(var(--blur)) saturate(190%) brightness(1.07);
+  border:1px solid var(--glass-border);
+  box-shadow:var(--shadow-lg),0 0 0 1px rgba(255,255,255,.04) inset,0 0 80px rgba(14,165,233,.05) inset;
+  position:relative}
+.glass::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.18) 18%,rgba(147,210,255,.38) 50%,rgba(255,255,255,.18) 82%,transparent 100%);
+  z-index:10;pointer-events:none;border-radius:inherit}
+
+/* ── Boot Screen ── */
+.boot{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:var(--c-void);transition:opacity 1.2s ease,visibility 1.2s}
+.boot.done{opacity:0;visibility:hidden;pointer-events:none}
+.boot-core{text-align:center}
+.boot-rings{width:148px;height:148px;margin:0 auto 32px;position:relative}
+.boot-ring{position:absolute;inset:0;border-radius:50%;border:1.5px solid transparent}
+.boot-ring-outer{border-top-color:var(--c-sky);border-right-color:rgba(14,165,233,.22);animation:spin 1.2s linear infinite}
+.boot-ring-mid{inset:16px;border-top-color:var(--c-aurora);border-left-color:rgba(139,92,246,.25);animation:spin 1.8s linear infinite reverse}
+.boot-ring-inner{inset:32px;border-top-color:var(--c-cyan);border-right-color:rgba(6,182,212,.18);animation:spin 2.5s linear infinite}
+.boot-center-orb{position:absolute;inset:48px;border-radius:50%;background:radial-gradient(circle,rgba(14,165,233,.1),rgba(14,165,233,.03),transparent);display:flex;align-items:center;justify-content:center}
+.boot-dot{width:10px;height:10px;border-radius:50%;background:var(--c-sky);box-shadow:0 0 18px var(--c-sky),0 0 40px rgba(14,165,233,.4);animation:breathe 2s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.4);opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.boot-logo{font-family:var(--display);font-size:38px;font-weight:800;letter-spacing:8px;background:linear-gradient(135deg,#fff 0%,rgba(200,225,255,.75) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.boot-logo span{background:linear-gradient(135deg,var(--c-sky),var(--c-aurora));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.boot-sub{font-size:10px;color:var(--t-lo);text-transform:uppercase;letter-spacing:3px;margin-top:6px;margin-bottom:28px}
+.boot-text{font-size:11px;color:var(--t-lo);font-family:var(--mono);letter-spacing:1px;animation:pulseText 2.4s ease-in-out infinite}
+@keyframes pulseText{0%,100%{opacity:.3}50%{opacity:.9}}
+.boot-progress-wrap{width:220px;height:2px;margin:18px auto 0;background:rgba(255,255,255,.06);border-radius:9999px;overflow:hidden}
+.boot-progress-bar{height:100%;border-radius:9999px;background:linear-gradient(90deg,var(--c-sky),var(--c-aurora));box-shadow:0 0 8px var(--c-sky);animation:bootLoad 2.8s ease-out forwards}
+@keyframes bootLoad{from{width:0%}to{width:88%}}
+
+/* ── Map ── */
+#map{position:fixed;inset:0;z-index:0}
+
+/* ── Topbar ── */
+.topbar{position:absolute;top:14px;left:14px;right:14px;z-index:20;padding:0 20px;display:flex;align-items:center;gap:12px;height:70px;border-radius:36px}
+.topbar::after{content:'';position:absolute;left:8%;bottom:0;right:8%;height:1px;background:linear-gradient(90deg,transparent,rgba(14,165,233,.22),rgba(14,165,233,.38) 50%,rgba(14,165,233,.22),transparent);pointer-events:none}
+
+.brand{display:flex;align-items:center;gap:11px;flex:none}
+.brand-mark{width:44px;height:44px;border-radius:14px;flex:none;background:linear-gradient(135deg,var(--c-blue),var(--c-violet));display:grid;place-items:center;color:#fff;box-shadow:0 4px 20px rgba(37,99,235,.55),0 0 0 1px rgba(255,255,255,.12) inset;position:relative;overflow:hidden}
+.brand-mark::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.18) 0%,transparent 55%)}
+.brand-mark svg{width:22px;height:22px;position:relative}
+.brand-meta h1{font-family:var(--display);font-size:15px;font-weight:800;letter-spacing:2.5px;line-height:1.1;color:var(--t-hi)}
+.brand-meta h1 span{background:linear-gradient(135deg,var(--c-sky),var(--c-arctic));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.brand-meta p{font-size:8.5px;color:var(--t-lo);text-transform:uppercase;letter-spacing:1.8px;margin-top:2px}
+
+.nat-headline{display:flex;align-items:center;gap:10px;padding:8px 14px;border-radius:16px;background:rgba(0,0,0,.28);border:1px solid var(--hairline);flex:1;max-width:400px;min-width:0}
+.nat-ico svg{width:20px;height:20px;display:block}
+.nat-text{min-width:0}
+.nat-eyebrow{font-size:8px;text-transform:uppercase;letter-spacing:2px;color:var(--c-cyan);font-weight:700;margin-bottom:2px}
+.nat-text > span:not(.nat-eyebrow){font-size:12px;font-weight:600;color:var(--t-hi);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+
+.stat-strip{display:flex;align-items:center;gap:4px;padding:6px 12px;border-radius:14px;background:rgba(0,0,0,.28);border:1px solid var(--hairline);flex:none}
+.stat-sep{width:1px;height:22px;background:var(--hairline);margin:0 4px}
+.stat{display:flex;flex-direction:column;align-items:center;gap:2px;padding:0 7px}
+.stat-val{font-family:var(--mono);font-size:17px;font-weight:700;color:var(--t-hi);line-height:1;letter-spacing:-.5px;transition:color .3s,text-shadow .3s}
+.stat:hover .stat-val{color:var(--c-sky);text-shadow:0 0 18px rgba(14,165,233,.5)}
+.stat-lbl{font-size:7.5px;text-transform:uppercase;letter-spacing:1.2px;color:var(--t-lo);font-weight:600}
+
+.sys{display:flex;align-items:center;gap:9px;margin-left:auto;flex:none}
+.phase{display:flex;align-items:center;gap:6px;padding:7px 11px;border-radius:11px;background:rgba(0,0,0,.28);border:1px solid var(--hairline)}
+.phase-ico svg{width:15px;height:15px;display:block}
+.phase-lbl{font-size:11px;font-weight:700;color:var(--t-hi)}
+.clock{font-family:var(--mono);font-size:14px;font-weight:700;letter-spacing:1px;color:var(--t-hi)}
+.sys-meta{font-size:10px;color:var(--t-lo);display:flex;align-items:center;gap:5px}
+.conn-dot{width:6px;height:6px;border-radius:50%;background:var(--s-critical);flex:none}
+.conn-dot.on{background:var(--s-advisory);box-shadow:0 0 0 2px rgba(16,185,129,.2);animation:connPulse 2.5s ease infinite}
+@keyframes connPulse{0%,100%{box-shadow:0 0 0 2px rgba(16,185,129,.2)}50%{box-shadow:0 0 0 5px rgba(16,185,129,0)}}
+
+/* ── Layout ── */
+.layout{position:absolute;top:98px;left:14px;right:14px;bottom:14px;z-index:10;display:flex;gap:12px;pointer-events:none}
+.layout > *{pointer-events:auto}
+.panel-left{width:350px;flex:none;border-radius:var(--radius);padding:16px;display:flex;flex-direction:column;overflow:hidden;gap:0}
+.panel-right{width:430px;flex:none;border-radius:var(--radius);padding:16px;display:flex;flex-direction:column;overflow:hidden}
+.map-viewport{flex:1;min-width:0;position:relative;pointer-events:none;border-radius:var(--radius);overflow:hidden}
+.map-viewport > *{pointer-events:auto}
+
+/* ── Left Panel ── */
+.search-wrap{position:relative;flex:none}
+.search{width:100%;padding:12px 15px;border-radius:13px;background:linear-gradient(160deg,rgba(0,0,0,.4),rgba(0,0,0,.5));border:1px solid var(--hairline-2);color:var(--t-hi);font-size:13.5px;outline:none;transition:border-color .2s,box-shadow .2s,background .2s;font-family:var(--font);box-shadow:0 1px 0 rgba(255,255,255,.04) inset}
+.search::placeholder{color:#7E9BBD;opacity:1}
+.search:focus{border-color:rgba(59,130,246,.6);box-shadow:0 0 0 3px rgba(37,99,235,.14),0 0 22px rgba(37,99,235,.12),0 1px 0 rgba(255,255,255,.06) inset;background:linear-gradient(160deg,rgba(0,0,0,.45),rgba(0,0,0,.55))}
+.search-results{position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:50;background:var(--glass-3);backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));border:1px solid var(--glass-border);border-radius:14px;max-height:280px;overflow-y:auto;display:none;box-shadow:var(--shadow-lg)}
+.search-results.show{display:block}
+.sr-item{padding:11px 15px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--hairline);cursor:pointer;font-size:13px;color:var(--t-mid);transition:background .15s}
+.sr-item:last-child{border-bottom:none}
+.sr-item:hover{background:rgba(37,99,235,.1)}
+.sr-type{font-size:8px;text-transform:uppercase;letter-spacing:1px;background:rgba(14,165,233,.1);padding:2px 7px;border-radius:5px;color:var(--c-sky);font-weight:700;border:1px solid rgba(14,165,233,.2)}
+
+.ask{display:flex;gap:8px;margin-top:10px;flex:none}
+.ask .search{flex:1;padding:10px 14px;border-radius:12px;font-size:12px}
+.ask-btn{padding:0 14px;flex:none;border-radius:12px;border:none;height:42px;background:linear-gradient(135deg,var(--c-aurora),var(--c-blue));color:#fff;font-weight:700;cursor:pointer;font-size:12px;font-family:var(--font);white-space:nowrap;box-shadow:0 4px 16px rgba(139,92,246,.4);transition:transform .2s var(--ease-spring),box-shadow .2s}
+.ask-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(139,92,246,.6)}
+.ask-answer{margin-top:10px;padding:12px 14px;font-size:13px;line-height:1.65;background:rgba(99,102,241,.07);border:1px solid rgba(99,102,241,.18);border-radius:13px;color:var(--t-mid);flex:none;font-style:italic}
+
+.filters{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap;flex:none}
+.filter{flex:1;min-width:100px;padding:9px 28px 9px 12px;border-radius:10px;background:rgba(0,0,0,.42);border:1px solid var(--hairline-2);color:var(--t-mid);outline:none;font-size:12px;font-weight:500;font-family:var(--font);cursor:pointer;transition:border-color .2s,background .2s,color .2s;-webkit-appearance:none;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237E9BBD' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 10px center}
+.filter:hover{border-color:rgba(37,99,235,.4);color:var(--t-hi)}
+.filter:focus{border-color:rgba(37,99,235,.6);box-shadow:0 0 0 3px rgba(37,99,235,.12);color:var(--t-hi)}
+.filter option{background:#0C1B33;color:var(--t-hi)}
+.filter-chip{display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:10px;background:rgba(0,0,0,.42);border:1px solid var(--hairline-2);cursor:pointer;font-size:11.5px;font-weight:500;color:var(--t-mid);user-select:none;transition:all .2s}
+.filter-chip:hover{border-color:rgba(37,99,235,.4);color:var(--t-hi)}
+.filter-chip:has(input:checked){background:rgba(37,99,235,.18);border-color:rgba(37,99,235,.5);color:var(--t-hi);box-shadow:0 0 14px rgba(37,99,235,.18)}
+.filter-chip input{display:none}
+.filter-chip svg{width:12px;height:12px}
+
+.list-head{display:flex;justify-content:space-between;align-items:center;font-size:9.5px;text-transform:uppercase;letter-spacing:2px;color:var(--t-lo);font-weight:700;margin:14px 0 8px;flex:none}
+.list-head #listCount{color:var(--c-sky);font-family:var(--mono);font-size:11px}
+.province-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding-right:2px}
+
+.pl-item{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;
+  background:linear-gradient(160deg,rgba(255,255,255,.055) 0%,rgba(255,255,255,.015) 100%);
+  border:1px solid var(--hairline-2);cursor:pointer;
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  transition:transform .22s var(--ease-spring),background .22s,border-color .22s,box-shadow .22s;
+  position:relative;overflow:hidden;flex:none}
+.pl-item::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);pointer-events:none}
+.pl-item::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(37,99,235,.14) 0%,transparent 70%);opacity:0;transition:opacity .22s;pointer-events:none}
+.pl-item:hover::after{opacity:1}
+.pl-item:hover{border-color:rgba(59,130,246,.4);transform:translateX(3px);box-shadow:-3px 0 0 rgba(59,130,246,.7) inset,0 8px 22px rgba(0,0,0,.3)}
+.pl-item.active{background:linear-gradient(160deg,rgba(37,99,235,.22),rgba(37,99,235,.06));border-color:rgba(59,130,246,.5);box-shadow:-3px 0 0 var(--c-blue) inset,0 0 24px rgba(37,99,235,.22)}
+.pl-item.active::after{opacity:1}
+.pl-bg-icon{position:absolute;right:-12px;top:50%;transform:translateY(-50%) rotate(-15deg);font-size:72px;opacity:.05;pointer-events:none;filter:blur(2px)}
+.pl-main{flex:1;min-width:0}
+.pl-name{font-size:13px;font-weight:700;color:var(--t-hi);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pl-sub{font-size:10px;color:var(--t-lo);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pl-right{display:flex;flex-direction:column;align-items:flex-end;flex:none}
+.pl-temp{font-family:var(--mono);font-size:18px;font-weight:700;line-height:1}
+.pl-tag{font-size:8px;padding:2px 7px;border-radius:5px;text-transform:uppercase;font-weight:700;margin-top:4px;letter-spacing:.5px}
+
+/* ── Map Controls ── */
+.map-controls{position:absolute;top:0;right:0;width:210px;max-height:calc(100% - 208px);overflow-y:auto;background:var(--glass-3);border-radius:var(--radius-sm);padding:14px;backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));border:1px solid var(--glass-border);box-shadow:var(--shadow-lg);z-index:500;position:absolute}
+.map-controls::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),rgba(147,210,255,.32) 50%,rgba(255,255,255,.2),transparent);z-index:10;pointer-events:none}
+.mc-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.mc-head-title{font-size:9px;text-transform:uppercase;letter-spacing:2px;font-weight:700;color:var(--t-hi)}
+.mc-collapse{background:rgba(255,255,255,.07);border:1px solid var(--hairline);width:26px;height:26px;border-radius:8px;color:var(--t-lo);cursor:pointer;display:grid;place-items:center;transition:all .2s}
+.mc-collapse:hover{background:rgba(255,255,255,.14);color:var(--t-hi)}
+.mc-collapse svg{width:14px;height:14px}
+.layers-fab{position:absolute;top:0;right:0;z-index:500;width:44px;height:44px;border-radius:13px;display:none;place-items:center;cursor:pointer;background:var(--glass-3);border:1px solid var(--glass-border);color:var(--t-hi);box-shadow:var(--shadow-lg);transition:all .2s;backdrop-filter:blur(var(--blur))}
+body.layers-min #mapControls{display:none}
+body.layers-min #layersFab{display:grid}
+.layers-fab:hover{background:rgba(37,99,235,.3);border-color:rgba(37,99,235,.5);transform:scale(1.06)}
+.layers-fab svg{width:20px;height:20px}
+.mc-section{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--hairline)}
+.mc-section:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.mc-title{font-size:8px;text-transform:uppercase;letter-spacing:2px;color:var(--c-cyan);font-weight:700;margin-bottom:10px}
+.basemap-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.bm{display:flex;flex-direction:column;align-items:center;gap:5px;padding:9px 4px;border-radius:9px;border:1px solid var(--hairline);background:rgba(0,0,0,.32);color:var(--t-lo);font-size:10px;font-weight:600;cursor:pointer;transition:all .2s;font-family:var(--font)}
+.bm em{font-style:normal}
+.bm svg{width:16px;height:16px}
+.bm:hover{background:rgba(255,255,255,.05);color:var(--t-hi)}
+.bm.active{background:rgba(37,99,235,.15);border-color:rgba(37,99,235,.45);color:var(--c-sky)}
+.layer-toggle{display:flex;align-items:center;justify-content:space-between;padding:7px 0;cursor:pointer;font-size:12px;font-weight:500;color:var(--t-mid);transition:color .15s}
+.layer-toggle:hover{color:var(--t-hi)}
+.lt-label{display:flex;align-items:center;gap:7px}
+.lt-label svg{width:13px;height:13px;color:var(--t-lo)}
+.layer-toggle input{display:none}
+.switch{width:34px;height:19px;border-radius:9999px;background:rgba(255,255,255,.1);position:relative;transition:.3s;flex:none}
+.switch::after{content:'';position:absolute;left:2px;top:2px;width:15px;height:15px;border-radius:50%;background:#fff;transition:.3s}
+.layer-toggle input:checked ~ .switch{background:var(--c-blue)}
+.layer-toggle input:checked ~ .switch::after{left:17px}
+
+/* ── Map Legend ── */
+.map-legend{position:absolute;bottom:204px;left:0;width:176px;z-index:500;
+  background:linear-gradient(152deg,rgba(13,26,58,.82) 0%,rgba(7,14,36,.78) 55%,rgba(10,20,48,.8) 100%);
+  padding:15px 16px;border-radius:var(--radius-sm);border:1px solid var(--hairline-2);
+  box-shadow:0 10px 30px rgba(0,0,0,.45),0 2px 8px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.06) inset,0 1px 0 rgba(255,255,255,.08) inset;
+  backdrop-filter:blur(var(--blur)) saturate(170%);-webkit-backdrop-filter:blur(var(--blur)) saturate(170%);overflow:hidden}
+.map-legend::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),rgba(147,210,255,.42) 50%,rgba(255,255,255,.22),transparent);pointer-events:none;border-radius:inherit}
+.map-legend .mc-title{margin-bottom:12px}
+.lg{display:flex;align-items:center;gap:10px;font-size:11.5px;font-weight:500;margin-bottom:9px;color:var(--t-mid);transition:color .15s}
+.lg:hover{color:var(--t-hi)}
+.lg:last-of-type{margin-bottom:0}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex:none;position:relative}
+.dot::after{content:'';position:absolute;inset:1.5px;border-radius:50%;background:linear-gradient(160deg,rgba(255,255,255,.55),transparent 60%)}
+.s-info{background:var(--s-info);box-shadow:0 0 8px rgba(14,165,233,.8)}
+.s-advisory{background:var(--s-advisory);box-shadow:0 0 8px rgba(16,185,129,.8)}
+.s-watch{background:var(--s-watch);box-shadow:0 0 8px rgba(245,158,11,.8)}
+.s-warning{background:var(--s-warning);box-shadow:0 0 8px rgba(249,115,22,.8)}
+.s-critical{background:var(--s-critical);box-shadow:0 0 8px rgba(239,68,68,.8);animation:critPulse 1.8s ease infinite}
+@keyframes critPulse{0%,100%{box-shadow:0 0 8px rgba(239,68,68,.8)}50%{box-shadow:0 0 16px rgba(239,68,68,.9),0 0 28px rgba(239,68,68,.35)}}
+.src{font-size:8.5px;color:var(--t-lo);margin-top:12px;padding-top:11px;border-top:1px solid var(--hairline-2);line-height:1.55}
+.map-attrib{position:absolute;bottom:204px;left:188px;z-index:501;font-family:var(--mono);font-size:9px;color:var(--t-mid);
+  background:linear-gradient(152deg,rgba(14,28,62,.6),rgba(8,16,40,.52));padding:5px 10px;border-radius:9px;
+  backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--hairline-2);box-shadow:0 4px 16px rgba(0,0,0,.4)}
+/* Hide the radar/IR time chip entirely when it has no text (no stray glass dot) */
+.map-attrib:empty{display:none}
+
+/* ── Timeline ── */
+.timeline{position:absolute;bottom:0;left:0;right:0;z-index:500;
+  background:linear-gradient(152deg,rgba(14,28,62,.62) 0%,rgba(8,16,40,.55) 55%,rgba(11,22,52,.6) 100%);
+  border:1px solid var(--hairline-2);border-radius:var(--radius-sm);padding:14px 18px 10px;display:flex;flex-direction:column;
+  backdrop-filter:blur(var(--blur)) saturate(180%) brightness(1.08);-webkit-backdrop-filter:blur(var(--blur)) saturate(180%) brightness(1.08);
+  box-shadow:var(--shadow-lg),0 0 0 1px rgba(255,255,255,.05) inset,0 1px 0 rgba(255,255,255,.06) inset;height:192px}
+.timeline::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),rgba(147,210,255,.42) 50%,rgba(255,255,255,.22),transparent);pointer-events:none;border-radius:inherit}
+.tl-title{font-size:9.5px;text-transform:uppercase;letter-spacing:2px;font-weight:700;color:var(--t-mid);margin-bottom:11px;flex:none;display:flex;align-items:center;gap:8px}
+.tl-title::before{content:'';width:20px;height:1px;background:linear-gradient(90deg,var(--c-cyan),transparent);flex:none}
+.hourly-strip{display:flex;gap:9px;overflow-x:auto;overflow-y:hidden;flex:1;min-height:0;padding:2px 2px 10px;align-items:stretch;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scrollbar-width:thin;scrollbar-color:rgba(120,170,255,.5) transparent}
+.hourly-strip::-webkit-scrollbar{height:8px}
+.hourly-strip::-webkit-scrollbar-track{background:rgba(255,255,255,.05);border-radius:9999px;margin:0 2px}
+.hourly-strip::-webkit-scrollbar-thumb{background:linear-gradient(90deg,rgba(14,165,233,.6),rgba(37,99,235,.6));border-radius:9999px;border:2px solid transparent;background-clip:padding-box}
+.hourly-strip::-webkit-scrollbar-thumb:hover{background:linear-gradient(90deg,rgba(14,165,233,.9),rgba(37,99,235,.9));background-clip:padding-box}
+
+.hour{flex:0 0 76px;scroll-snap-align:start;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;
+  background:linear-gradient(160deg,rgba(255,255,255,.07) 0%,rgba(255,255,255,.02) 100%);
+  border-radius:15px;padding:12px 7px;border:1px solid var(--hairline-2);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  transition:transform .28s var(--ease-spring),background .28s,border-color .28s,box-shadow .28s;cursor:pointer;position:relative;overflow:hidden}
+.hour::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent)}
+.hour:hover{background:linear-gradient(160deg,rgba(37,99,235,.22),rgba(37,99,235,.08));border-color:rgba(59,130,246,.5);transform:translateY(-5px) scale(1.04);box-shadow:0 14px 32px rgba(37,99,235,.3),0 0 0 1px rgba(59,130,246,.25)}
+.hour.now{background:linear-gradient(160deg,rgba(37,99,235,.3),rgba(37,99,235,.12));border-color:rgba(59,130,246,.65);box-shadow:0 0 24px rgba(37,99,235,.35),0 0 0 1px rgba(59,130,246,.35)}
+.h-time{font-size:10.5px;font-weight:700;color:var(--t-mid);letter-spacing:.3px;flex:none}
+.hour.now .h-time{color:var(--c-arctic)}
+.h-ico{line-height:1;flex:none}
+.h-ico svg{width:26px;height:26px;display:block;filter:drop-shadow(0 1px 4px rgba(0,0,0,.4))}
+.h-temp{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--t-hi);flex:none}
+.h-rain{font-size:11px;color:var(--c-arctic);font-weight:700;flex:none}
+.h-bar{width:46px;height:4px;border-radius:9999px;background:rgba(255,255,255,.1);position:relative;overflow:hidden;flex:none;margin-top:1px}
+.h-bar i{position:absolute;left:0;top:0;bottom:0;border-radius:9999px;background:linear-gradient(90deg,var(--c-arctic),var(--c-blue));box-shadow:0 0 6px rgba(34,211,238,.5)}
+
+/* ── Right Panel ── */
+.tabs{display:flex;gap:5px;margin-bottom:14px;flex:none;background:rgba(0,0,0,.32);padding:4px;border-radius:13px;border:1px solid var(--hairline-2)}
+.tab{flex:1;padding:9px 8px;border-radius:10px;border:none;background:transparent;color:var(--t-lo);font-size:12px;font-weight:600;cursor:pointer;transition:color .2s,background .2s,box-shadow .2s;font-family:var(--font);letter-spacing:.2px}
+.tab:hover{color:var(--t-mid)}
+.tab.active{background:linear-gradient(160deg,rgba(59,130,246,.25),rgba(37,99,235,.12));color:#fff;box-shadow:0 4px 14px rgba(37,99,235,.3),0 0 0 1px rgba(147,197,253,.25) inset,0 1px 0 rgba(255,255,255,.12) inset}
+.tab-pane{display:none;flex-direction:column;flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;gap:10px;padding-right:2px}
+.tab-pane.active{display:flex}
+.affected-list,.alerts-list{display:flex;flex-direction:column;gap:9px}
+
+/* ── Intel empty (national overview) ── */
+.intel-empty{display:flex;flex-direction:column;gap:12px;flex:1}
+.ov-head{display:flex;align-items:center;gap:14px;padding:16px;background:rgba(37,99,235,.06);border:1px solid rgba(37,99,235,.14);border-radius:18px}
+.ov-ico{width:52px;height:52px;flex:none;border-radius:15px;background:linear-gradient(135deg,rgba(37,99,235,.22),rgba(124,58,237,.18));border:1px solid rgba(37,99,235,.28);display:grid;place-items:center;color:var(--c-sky)}
+.ov-ico svg{width:26px;height:26px}
+.ov-eyebrow{font-size:8px;text-transform:uppercase;letter-spacing:2px;color:var(--c-sky);font-weight:700;margin-bottom:4px}
+.ov-head-text h3{font-size:20px;font-weight:700;color:var(--t-hi);line-height:1.2}
+.ov-headline{font-size:14px;line-height:1.6;color:var(--t-mid)}
+.ov-body{font-size:13px;line-height:1.65;color:var(--t-lo)}
+.ov-chips{display:flex;flex-wrap:wrap;gap:7px}
+.ov-chip{padding:5px 12px;background:rgba(255,255,255,.05);border:1px solid var(--hairline);border-radius:9999px;font-size:11px;cursor:pointer;color:var(--t-mid);transition:all .2s}
+.ov-chip:hover{background:rgba(37,99,235,.14);border-color:rgba(37,99,235,.35);color:var(--t-hi)}
+.ov-chip.lbl{background:transparent;border:none;color:var(--t-faint);pointer-events:none;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;font-size:8px}
+.ov-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.ai-badge{font-size:10px;padding:4px 10px;background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.24);border-radius:9999px;color:var(--c-aurora);font-weight:700;font-family:var(--mono)}
+.ov-updated{font-size:10px;color:var(--t-faint)}
+.ov-hint{font-size:12px;color:var(--t-faint);text-align:center;padding:8px 0}
+
+/* ── Province detail ── */
+.intel-detail{display:flex;flex-direction:column;gap:0;position:relative}
+.intel-bg-icon{position:absolute;right:0;top:-12px;font-size:200px;opacity:.05;pointer-events:none;filter:blur(12px);z-index:0;overflow:hidden}
+#intelDetail > *{position:relative;z-index:1;flex-shrink:0}
+#intelBgIcon{z-index:0!important}
+.back-btn{display:inline-flex;align-items:center;gap:5px;margin-bottom:14px;color:var(--c-sky);font-size:12px;font-weight:600;cursor:pointer;border:none;background:transparent;font-family:var(--font);padding:0;transition:all .2s}
+.back-btn:hover{color:var(--t-hi);gap:8px}
+.prov-head{position:relative;overflow:hidden;flex:none;display:flex;justify-content:space-between;align-items:flex-start;padding:18px;border-radius:18px;
+  background:linear-gradient(140deg,rgba(37,99,235,.18) 0%,rgba(124,58,237,.1) 50%,rgba(14,165,233,.08) 100%);
+  border:1px solid rgba(59,130,246,.28);margin-bottom:12px;
+  box-shadow:0 8px 28px rgba(37,99,235,.16),0 0 0 1px rgba(255,255,255,.04) inset,0 1px 0 rgba(255,255,255,.1) inset}
+.prov-head::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),rgba(147,210,255,.5) 50%,rgba(255,255,255,.28),transparent)}
+.prov-head h2{font-size:22px;font-weight:800;color:var(--t-hi);margin-bottom:4px;font-family:var(--display);letter-spacing:.3px}
+.prov-head p.muted,#pvRegion{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--c-arctic);font-weight:700}
+.pv-cond{display:flex;flex-direction:column;align-items:flex-end;flex:none}
+.pv-icon{line-height:1;margin-bottom:4px}
+.pv-icon svg{width:44px;height:44px;display:block;filter:drop-shadow(0 2px 8px rgba(0,0,0,.4))}
+.pv-temp{font-family:var(--mono);font-size:34px;font-weight:700;line-height:1;letter-spacing:-1.5px;text-shadow:0 2px 16px rgba(0,0,0,.35)}
+.pv-condtext{font-size:13px;color:var(--t-mid);margin-bottom:12px;font-weight:500}
+.pv-badges{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.badge{padding:4px 10px;border-radius:9999px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.7px}
+.metrics{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
+.metric{position:relative;overflow:hidden;padding:12px 11px;border-radius:13px;border:1px solid var(--hairline-2);
+  background:linear-gradient(160deg,rgba(255,255,255,.055) 0%,rgba(255,255,255,.015) 100%);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  transition:transform .2s var(--ease-spring),background .2s,border-color .2s,box-shadow .2s}
+.metric::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent)}
+.metric:hover{transform:translateY(-2px);background:linear-gradient(160deg,rgba(37,99,235,.18),rgba(37,99,235,.05));border-color:rgba(59,130,246,.4);box-shadow:0 8px 20px rgba(37,99,235,.18)}
+.m-lbl{font-size:8px;color:var(--t-lo);text-transform:uppercase;letter-spacing:1.2px;font-weight:700;margin-bottom:6px}
+.m-val{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--t-hi);letter-spacing:-.3px}
+.m-val small{font-size:9px;color:var(--t-lo);font-weight:600}
+.intel-block{margin-bottom:18px}
+.intel-block h4{font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--c-sky);margin-bottom:11px;font-weight:700;display:flex;align-items:center;gap:8px}
+.intel-block h4::before{content:'';width:3px;height:12px;border-radius:9999px;background:linear-gradient(180deg,var(--c-arctic),var(--c-blue));box-shadow:0 0 8px rgba(34,211,238,.5);flex:none}
+.intel-block h4::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(14,165,233,.28),transparent)}
+.qa{display:flex;flex-direction:column;gap:8px}
+.qa-item{position:relative;overflow:hidden;padding:12px 15px;border-radius:13px;border:1px solid var(--hairline-2);
+  background:linear-gradient(160deg,rgba(255,255,255,.05) 0%,rgba(255,255,255,.015) 100%);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:border-color .2s,background .2s}
+.qa-item::before{content:'';position:absolute;top:10px;bottom:10px;left:0;width:2.5px;border-radius:9999px;background:linear-gradient(180deg,var(--c-arctic),var(--c-blue));opacity:.7}
+.qa-item:hover{border-color:rgba(59,130,246,.32)}
+.qa-ai{background:linear-gradient(160deg,rgba(139,92,246,.14),rgba(139,92,246,.03));border-color:rgba(139,92,246,.28)}
+.qa-ai::before{background:linear-gradient(180deg,var(--c-aurora),var(--c-violet))}
+.qa-q{font-size:8px;text-transform:uppercase;letter-spacing:1.5px;color:var(--t-lo);margin-bottom:5px;font-weight:700}
+.qa-a{font-size:12.5px;line-height:1.65;color:var(--t-mid)}
+.qa-a strong{color:var(--c-arctic);font-weight:600}
+.precautions{list-style:none;padding:0;display:flex;flex-direction:column;gap:6px}
+.precautions li{position:relative;padding-left:18px;font-size:12px;line-height:1.6;color:var(--t-mid)}
+.precautions li::before{content:"▸";position:absolute;left:0;color:var(--c-blue);font-size:11px;top:1px}
+.chart-wrap{height:150px;width:100%;position:relative;border-radius:13px;padding:12px;border:1px solid var(--hairline-2);
+  background:linear-gradient(160deg,rgba(255,255,255,.04),rgba(255,255,255,.01));backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.daily-strip{display:flex;flex-direction:column;gap:6px}
+.day{display:flex;align-items:center;gap:8px;padding:10px 13px;border-radius:12px;border:1px solid var(--hairline-2);transition:transform .18s var(--ease-spring),background .18s,border-color .18s;
+  background:linear-gradient(160deg,rgba(255,255,255,.04),rgba(255,255,255,.012))}
+.day:hover{transform:translateX(2px);background:linear-gradient(160deg,rgba(37,99,235,.14),rgba(37,99,235,.04));border-color:rgba(59,130,246,.3)}
+.d-name{width:38px;font-size:12px;font-weight:700;color:var(--t-hi);flex:none}
+.d-ico{width:32px;font-size:20px;text-align:center;flex:none}
+.d-ico svg{width:24px;height:24px;display:inline-block}
+.d-hi{font-family:var(--mono);font-size:13px;font-weight:700;flex:none;min-width:34px;text-align:right}
+.d-lo{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--t-lo);flex:none;min-width:34px;text-align:right}
+.d-rain{font-size:11px;color:var(--c-sky);font-weight:700;margin-left:auto;min-width:34px;text-align:right}
+#forecastSummary{font-size:12px;color:var(--t-lo);margin-top:10px;line-height:1.5}
+
+/* ── Affected & Alerts ── */
+.pane-head{display:flex;justify-content:space-between;align-items:center;font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--t-lo);font-weight:700;flex:none}
+.aff-card,.alert-card{background:rgba(0,0,0,.26);border-radius:14px;border:1px solid var(--hairline);border-left-width:3px;padding:14px;cursor:pointer;transition:all .2s}
+.aff-card:hover,.alert-card:hover{background:rgba(0,0,0,.36);transform:translateX(2px)}
+.aff-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.aff-name{font-size:14px;font-weight:700;color:var(--t-hi)}
+.aff-region{font-size:10px;color:var(--t-lo);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.aff-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.aff-pill{font-size:10px;padding:3px 8px;background:rgba(255,255,255,.06);border:1px solid var(--hairline);border-radius:5px;color:var(--t-lo)}
+.aff-summary{font-size:12px;color:var(--t-mid);line-height:1.5;margin-top:8px}
+.a-title{font-size:14px;font-weight:700;color:var(--t-hi);flex:1;margin-right:8px}
+.a-reason{font-size:12px;color:var(--t-mid);line-height:1.5;margin-top:6px}
+.a-action{font-size:12px;color:var(--c-sky);margin-top:6px;line-height:1.5;font-style:italic}
+.a-time{font-size:10px;color:var(--t-faint);margin-top:8px;font-family:var(--mono)}
+
+/* ── Toast ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);z-index:99999;padding:12px 22px;border-radius:9999px;background:linear-gradient(145deg,rgba(10,22,54,.98),rgba(6,12,30,.98));backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.14);box-shadow:0 16px 40px rgba(0,0,0,.72),0 0 0 1px rgba(255,255,255,.06) inset;font-size:13px;font-weight:500;color:var(--t-mid);transition:transform .4s var(--ease-spring),opacity .4s;opacity:0;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* ── Leaflet ── */
+.leaflet-popup-content-wrapper{
+  background:linear-gradient(155deg,rgba(16,30,66,.9) 0%,rgba(8,15,36,.93) 55%,rgba(12,24,54,.91) 100%)!important;
+  backdrop-filter:blur(44px) saturate(180%) brightness(1.06)!important;-webkit-backdrop-filter:blur(44px) saturate(180%) brightness(1.06)!important;
+  border:1px solid var(--hairline-2)!important;border-radius:20px!important;
+  box-shadow:0 24px 60px rgba(0,0,0,.7),0 2px 10px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.06) inset,0 1px 0 rgba(255,255,255,.1) inset!important;
+  color:var(--t-hi)!important;overflow:hidden}
+.leaflet-popup-tip{background:rgba(10,20,46,.92)!important;box-shadow:none!important}
+.leaflet-popup-content{margin:0!important;width:266px!important}
+.leaflet-container a.leaflet-popup-close-button{color:var(--t-lo)!important;font-size:18px!important;right:12px!important;top:12px!important;width:22px!important;height:22px!important;line-height:20px!important;border-radius:7px!important;transition:all .15s!important}
+.leaflet-container a.leaflet-popup-close-button:hover{color:var(--t-hi)!important;background:rgba(255,255,255,.08)!important}
+.pop{padding:16px 17px 15px;position:relative}
+.pop::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),rgba(147,210,255,.45) 50%,rgba(255,255,255,.22),transparent);pointer-events:none}
+.pop-hero{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:13px;padding-right:20px}
+.pop-hero-l{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.pop-hero-txt{min-width:0;flex:1}
+.pop-ico{width:38px;height:38px;flex:none;border-radius:11px;display:grid;place-items:center;
+  background:linear-gradient(155deg,rgba(255,255,255,.1),rgba(255,255,255,.03));border:1px solid var(--hairline-2);box-shadow:0 2px 8px rgba(0,0,0,.3) inset}
+.pop-ico svg{width:24px;height:24px;display:block;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+.pop h4{font-size:15px;font-weight:800;color:var(--t-hi);line-height:1.15;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:var(--display)}
+.pop-cond{font-size:10.5px;color:var(--t-lo);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pop-temp{font-family:var(--mono);font-size:26px;font-weight:700;line-height:1;flex:none;letter-spacing:-1px}
+.pop-temp span{font-size:15px;opacity:.6;font-weight:600}
+.pop-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:13px}
+.pop-pill{font-size:9px;font-weight:800;letter-spacing:.6px;padding:4px 9px;border-radius:9999px;color:var(--pc,#9fb6d6);background:color-mix(in srgb,var(--pc,#5b6b8c) 16%,transparent);border:1px solid color-mix(in srgb,var(--pc,#5b6b8c) 40%,transparent)}
+.pop-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:14px}
+.pop-cell{display:flex;flex-direction:column;gap:3px;padding:9px 11px;border-radius:11px;background:rgba(0,0,0,.26);border:1px solid var(--hairline-2);min-width:0}
+.pop-cell-wide{grid-column:1 / -1}
+.pop-k{font-size:8px;text-transform:uppercase;letter-spacing:1.2px;color:var(--t-faint);font-weight:700}
+.pop-v{font-size:12px;font-weight:700;color:var(--t-hi);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.pop button{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:11px;border-radius:12px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,var(--c-blue),var(--c-violet));color:#fff;font-size:12.5px;font-weight:700;font-family:var(--font);letter-spacing:.2px;
+  box-shadow:0 6px 18px rgba(37,99,235,.4),0 0 0 1px rgba(255,255,255,.12) inset;transition:transform .2s var(--ease-spring),box-shadow .2s,filter .2s}
+.pop button svg{width:15px;height:15px;transition:transform .2s var(--ease-spring)}
+.pop button:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(37,99,235,.55),0 0 0 1px rgba(255,255,255,.18) inset;filter:brightness(1.06)}
+.pop button:hover svg{transform:translateX(3px)}
+.pop button:active{transform:translateY(0)}
+
+/* ── Markers ── */
+.pwin-marker{width:16px;height:16px;cursor:pointer;position:relative;display:flex;align-items:center;justify-content:center}
+.m-dot{width:10px;height:10px;border-radius:50%;background:var(--c,#94a3b8);border:2px solid rgba(255,255,255,.28);box-shadow:0 0 8px var(--c,#94a3b8),0 0 18px rgba(0,0,0,.2);transition:transform .2s}
+.pwin-marker.affected .m-dot{animation:mPulse 2.5s ease infinite}
+@keyframes mPulse{0%,100%{transform:scale(1);box-shadow:0 0 8px var(--c,#94a3b8)}50%{transform:scale(1.35);box-shadow:0 0 18px var(--c,#94a3b8),0 0 32px rgba(0,0,0,.15)}}
+.m-label{position:absolute;left:50%;transform:translateX(-50%);bottom:100%;margin-bottom:4px;background:rgba(5,11,26,.93);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.1);padding:3px 6px;border-radius:5px;font-size:9px;font-weight:600;color:#fff;white-space:nowrap;font-family:var(--font)}
+
+/* ── Responsive ── */
+@media(max-width:1400px){.panel-left{width:300px}.panel-right{width:380px}}
+@media(max-width:1200px){.panel-left{width:270px}.panel-right{width:345px}.nat-headline{max-width:260px}.stat-strip{display:none}}
+@media(max-width:1000px){.panel-right{display:none}.panel-left{width:290px}}
+
+/* Tablet: tighten the topbar, drop the national headline strip */
+@media(max-width:820px){
+  .nat-headline{display:none}
+  .topbar{height:62px;padding:0 14px;gap:8px}
+  .map-legend{display:none}
+}
+
+/* Phone: left panel becomes the primary full-width view over the map */
+@media(max-width:640px){
+  .topbar{top:8px;left:8px;right:8px;border-radius:22px;gap:6px}
+  .brand-meta p{display:none}
+  .sys-meta{display:none}
+  .layout{top:80px;left:8px;right:8px;bottom:8px;flex-direction:column;gap:8px}
+  .panel-left{width:auto;flex:1;min-height:0}
+  .map-viewport{display:none}
+  .clock{font-size:12px}
+  .phase-lbl{display:none}
+  /* Province detail slides up as a full-screen sheet over the list */
+  body.mobile-detail .panel-right{
+    display:flex;position:fixed;inset:8px;width:auto;z-index:60;
+    animation:sheetUp .35s var(--ease-out)
+  }
+  body.mobile-detail .panel-left{display:none}
+}
+@keyframes sheetUp{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+/* Reduced-motion: respect the OS setting — kill ambient/looping animation */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  .atm-orb,.boot-dot,.boot-ring{animation:none!important}
+  #particleCanvas,#rainCanvas,.rainfx,.sunfx{display:none!important}
+}
+
+/* ── Micro-interactions ── */
+.hour:hover .h-temp{color:var(--t-hi)}
+.hour:hover .h-time{color:var(--c-sky)}
+.metric:hover .m-val{color:var(--c-sky);transition:color .2s}
+.pl-item:hover .pl-name{color:var(--t-hi)}
+  </style>
+</head>
+<body data-weather="clear">
+
+  <noscript>
+    <div style="position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:#020810;color:#B8D0EE;font-family:system-ui,sans-serif;text-align:center;padding:24px">
+      <div>
+        <div style="font-size:22px;font-weight:800;letter-spacing:4px;color:#fff;margin-bottom:10px">PWIN&nbsp;AI</div>
+        <p style="font-size:14px;line-height:1.6;max-width:420px">This live weather command center needs JavaScript enabled.<br>Please enable JavaScript and reload to view real-time Philippine weather intelligence.</p>
+      </div>
+    </div>
+  </noscript>
+
+  <!-- Atmosphere -->
+  <div class="bg-glow" aria-hidden="true"></div>
+  <div class="atm-layer" aria-hidden="true">
+    <div class="atm-orb atm-orb-1"></div>
+    <div class="atm-orb atm-orb-2"></div>
+    <div class="atm-orb atm-orb-3"></div>
+    <div class="atm-orb atm-orb-4"></div>
+  </div>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-vignette" aria-hidden="true"></div>
+
+  <!-- Canvas systems -->
+  <canvas id="particleCanvas" aria-hidden="true"></canvas>
+  <canvas id="rainCanvas" aria-hidden="true"></canvas>
+
+  <!-- Weather CSS fx -->
+  <div class="rainfx" aria-hidden="true"></div>
+  <div class="sunfx" aria-hidden="true"></div>
+
+  <!-- Map -->
+  <div id="map"></div>
+
+  <!-- ════ BOOT ════ -->
+  <div id="boot" class="boot">
+    <div class="boot-core">
+      <div class="boot-rings">
+        <div class="boot-ring boot-ring-outer"></div>
+        <div class="boot-ring boot-ring-mid"></div>
+        <div class="boot-ring boot-ring-inner"></div>
+        <div class="boot-center-orb"><div class="boot-dot"></div></div>
+      </div>
+      <div class="boot-logo">PWIN<span>AI</span></div>
+      <div class="boot-sub">Philippine Weather Intelligence Network</div>
+      <div class="boot-text" id="bootText">Initializing weather intelligence…</div>
+      <div class="boot-progress-wrap"><div class="boot-progress-bar" id="bootProgress"></div></div>
+    </div>
+  </div>
+
+  <!-- ════ TOPBAR ════ -->
+  <header class="topbar glass">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 7a5 5 0 1 0 5 5"/><path d="M12 12 21 3"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/></svg>
+      </div>
+      <div class="brand-meta">
+        <h1>PWIN<span>AI</span></h1>
+        <p>Philippine Weather Intelligence Network</p>
+      </div>
+    </div>
+
+    <div class="nat-headline" id="natHeadline">
+      <span class="nat-ico" id="natIco"></span>
+      <span class="nat-text">
+        <span class="nat-eyebrow">National Status</span>
+        <span id="natHeadlineText">Loading national weather status…</span>
+      </span>
+    </div>
+
+    <div class="stat-strip" id="statStrip">
+      <div class="stat"><span class="stat-val" id="statRaining">–</span><span class="stat-lbl">Raining</span></div>
+      <div class="stat-sep"></div>
+      <div class="stat"><span class="stat-val" id="statAffected">–</span><span class="stat-lbl">Affected</span></div>
+      <div class="stat-sep"></div>
+      <div class="stat"><span class="stat-val" id="statAlerts">–</span><span class="stat-lbl">Alerts</span></div>
+      <div class="stat-sep"></div>
+      <div class="stat"><span class="stat-val" id="statTemp">–</span><span class="stat-lbl">Avg °C</span></div>
+      <div class="stat-sep"></div>
+      <div class="stat sev"><span class="stat-val" id="statSeverity">–</span><span class="stat-lbl">Max Level</span></div>
+    </div>
+
+    <div class="sys">
+      <div class="phase" id="phase" title="Time of day">
+        <span class="phase-ico" id="phaseIco"></span>
+        <span class="phase-lbl" id="phaseLbl">—</span>
+      </div>
+      <div class="clock" id="clock">--:--:--</div>
+      <div class="sys-meta">
+        <span id="connDot" class="conn-dot off"></span>
+        <span id="connText">connecting…</span>
+      </div>
+      <div class="sys-meta" id="updatedMeta">updated –</div>
+    </div>
+  </header>
+
+  <!-- ════ MAIN GRID ════ -->
+  <main class="layout">
+
+    <!-- LEFT: search + province list -->
+    <aside class="panel-left glass">
+      <div class="search-wrap">
+        <input id="searchInput" class="search" type="text" placeholder="Search province, city or region…" autocomplete="off" />
+        <div id="searchResults" class="search-results"></div>
+      </div>
+
+      <div class="ask">
+        <input id="askInput" class="search" type="text" placeholder="Ask: 'is it raining in Cebu?'" />
+        <button id="askBtn" class="ask-btn">Ask AI</button>
+      </div>
+      <div id="askAnswer" class="ask-answer hidden"></div>
+
+      <div class="filters">
+        <select id="filterSeverity" class="filter">
+          <option value="">All severities</option>
+          <option value="advisory">Advisory+</option>
+          <option value="watch">Watch+</option>
+          <option value="warning">Warning+</option>
+          <option value="critical">Critical</option>
+        </select>
+        <select id="filterEvent" class="filter">
+          <option value="">All events</option>
+          <option value="thunderstorm">Thunderstorm</option>
+          <option value="heavy_rain">Heavy rain</option>
+          <option value="moderate_rain">Moderate rain</option>
+          <option value="light_rain">Light rain</option>
+          <option value="strong_winds">Strong winds</option>
+          <option value="heat">Heat</option>
+        </select>
+        <label class="filter-chip">
+          <input type="checkbox" id="filterAffected" />
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="21 4 3 4 10 12.4 10 19 14 21 14 12.4 21 4"/></svg>
+          <span>Affected only</span>
+        </label>
+      </div>
+
+      <div class="list-head">
+        <span>Provinces</span><span id="listCount" class="muted">–</span>
+      </div>
+      <div id="provinceList" class="province-list"></div>
+    </aside>
+
+    <!-- CENTER: map viewport -->
+    <div class="map-viewport">
+
+      <button id="layersFab" class="layers-fab glass" title="Map layers" aria-label="Open map layers">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+      </button>
+
+      <div class="map-controls glass" id="mapControls">
+        <div class="mc-head">
+          <span class="mc-head-title">Map Layers</span>
+          <button id="layersCollapse" class="mc-collapse" title="Minimize" aria-label="Minimize layers panel">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+        </div>
+        <div class="mc-section">
+          <div class="mc-title">Base</div>
+          <div class="basemap-grid">
+            <button class="bm active" data-base="light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><em>Light</em></button>
+            <button class="bm" data-base="dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg><em>Dark</em></button>
+            <button class="bm" data-base="satellite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg><em>Satellite</em></button>
+            <button class="bm" data-base="terrain"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20 L9 9 L13 16 L15 13 L21 20 Z"/></svg><em>Terrain</em></button>
+          </div>
+        </div>
+        <div class="mc-section">
+          <div class="mc-title">Layers</div>
+          <label class="layer-toggle"><input type="checkbox" id="layerMarkers" checked /><span class="lt-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Province status</span></span><span class="switch"></span></label>
+          <label class="layer-toggle"><input type="checkbox" id="layerRadar" /><span class="lt-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1.6"/><path d="M8.5 15.5a5 5 0 0 1 0-7"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M6 18a9 9 0 0 1 0-12"/><path d="M18 6a9 9 0 0 1 0 12"/></svg><span>Rain radar</span></span><span class="switch"></span></label>
+          <label class="layer-toggle"><input type="checkbox" id="layerClouds" /><span class="lt-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18h10a3.5 3.5 0 0 0 .4-7A5 5 0 0 0 8 8.6 3.7 3.7 0 0 0 7 18z"/></svg><span>Clouds (IR)</span></span><span class="switch"></span></label>
+          <label class="layer-toggle"><input type="checkbox" id="layerHeat" /><span class="lt-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.8V5a2 2 0 1 0-4 0v9.8a4 4 0 1 0 4 0z"/></svg><span>Temperature</span></span><span class="switch"></span></label>
+          <label class="layer-toggle"><input type="checkbox" id="layerLabels" /><span class="lt-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1.2"/></svg><span>Labels</span></span><span class="switch"></span></label>
+        </div>
+      </div>
+
+      <div class="map-legend glass" id="mapLegend">
+        <div class="mc-title">Severity</div>
+        <div class="lg"><span class="dot s-info"></span>Info</div>
+        <div class="lg"><span class="dot s-advisory"></span>Advisory</div>
+        <div class="lg"><span class="dot s-watch"></span>Watch</div>
+        <div class="lg"><span class="dot s-warning"></span>Warning</div>
+        <div class="lg"><span class="dot s-critical"></span>Critical</div>
+        <div class="src">Sources: Open-Meteo · MET Norway · RainViewer radar · Himawari-9 IR (NASA GIBS) · PAGASA</div>
+      </div>
+
+      <div class="map-attrib" id="radarTime"></div>
+
+      <footer class="timeline glass">
+        <div class="tl-title" id="tlTitle">National hourly outlook — select a province for detail</div>
+        <div id="hourlyStrip" class="hourly-strip"></div>
+      </footer>
+    </div>
+
+    <!-- RIGHT: intelligence -->
+    <aside class="panel-right glass">
+      <div class="tabs">
+        <button class="tab active" data-tab="intel">Intelligence</button>
+        <button class="tab" data-tab="affected">Affected</button>
+        <button class="tab" data-tab="alerts">Alerts</button>
+      </div>
+
+      <!-- INTEL TAB -->
+      <div class="tab-pane active" id="tab-intel">
+        <div id="intelEmpty" class="intel-empty">
+          <div class="ov-head">
+            <div class="ov-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg></div>
+            <div class="ov-head-text">
+              <div class="ov-eyebrow">National Weather Briefing</div>
+              <h3>Philippines Overview</h3>
+            </div>
+          </div>
+          <div class="ov-headline" id="natHeadlinePanel">Monitoring nationwide weather…</div>
+          <p id="natBody" class="ov-body">First data refresh in progress…</p>
+          <div class="ov-chips" id="ovChips"></div>
+          <div class="ov-foot">
+            <span class="ai-badge" id="aiBadge">AI engine: –</span>
+            <span class="ov-updated" id="ovUpdated"></span>
+          </div>
+          <div class="ov-hint">Select a province on the map or list for detailed intelligence.</div>
+        </div>
+
+        <div id="intelDetail" class="intel-detail hidden">
+          <div class="intel-bg-icon" aria-hidden="true" id="intelBgIcon"></div>
+          <button id="backBtn" class="back-btn">← National overview</button>
+          <div class="prov-head">
+            <div>
+              <h2 id="pvName">–</h2>
+              <p id="pvRegion" class="muted">–</p>
+            </div>
+            <div class="pv-cond">
+              <div class="pv-icon" id="pvIcon">☀️</div>
+              <div class="pv-temp" id="pvTemp">–°</div>
+            </div>
+          </div>
+          <div id="pvCondText" class="pv-condtext">–</div>
+          <div id="pvBadges" class="pv-badges"></div>
+          <div class="metrics" id="pvMetrics"></div>
+          <div class="intel-block">
+            <h4>Event Intelligence</h4>
+            <div class="qa" id="pvQA"></div>
+          </div>
+          <div class="intel-block">
+            <h4>Recommended Precautions</h4>
+            <ul id="pvPrecautions" class="precautions"></ul>
+          </div>
+          <div class="intel-block">
+            <h4>24-Hour Outlook</h4>
+            <div class="chart-wrap"><canvas id="hourlyChart"></canvas></div>
+          </div>
+          <div class="intel-block">
+            <h4>7-Day Forecast</h4>
+            <div id="dailyStrip" class="daily-strip"></div>
+            <p id="forecastSummary" class="muted small"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- AFFECTED TAB -->
+      <div class="tab-pane" id="tab-affected">
+        <div class="pane-head"><span>Affected Provinces</span><span id="affCount" class="muted">–</span></div>
+        <div id="affectedList" class="affected-list"></div>
+      </div>
+
+      <!-- ALERTS TAB -->
+      <div class="tab-pane" id="tab-alerts">
+        <div class="pane-head"><span>Active Alerts</span><span id="alertCount" class="muted">–</span></div>
+        <div id="alertsList" class="alerts-list"></div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <script>
+
+/* =====================================================================
+   PWIN AI — API client, WebSocket, shared utilities
+   ===================================================================== */
+window.PWIN = window.PWIN || {};
+
+PWIN.api = (function () {
+  const base = ""; // served from same origin
+
+  async function get(path) {
+    const r = await fetch(base + path);
+    if (!r.ok) throw new Error(`GET ${path} → ${r.status}`);
+    return r.json();
+  }
+
+  async function post(path, body, auth = false) {
+    const headers = { "Content-Type": "application/json" };
+    if (auth) {
+      const t = getToken();
+      if (t) headers["Authorization"] = "Bearer " + t;
+    }
+    const r = await fetch(base + path, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body || {}),
+    });
+    if (!r.ok) {
+      const err = new Error(`POST ${path} → ${r.status}`);
+      err.status = r.status;
+      throw err;
+    }
+    return r.json();
+  }
+
+  const getToken = () => localStorage.getItem("pwin_token");
+  const setToken = (t) => localStorage.setItem("pwin_token", t);
+
+  // --- WebSocket with auto-reconnect ---
+  function connectWS(onMessage, onStatus) {
+    let ws, retry = 0, alive = true, pingTimer;
+
+    function open() {
+      const proto = location.protocol === "https:" ? "wss" : "ws";
+      ws = new WebSocket(`${proto}://${location.host}/ws/live`);
+
+      ws.onopen = () => {
+        retry = 0;
+        onStatus && onStatus(true);
+        pingTimer = setInterval(() => ws.readyState === 1 && ws.send("ping"), 25000);
+      };
+      ws.onmessage = (e) => {
+        if (e.data === "pong") return;
+        try { onMessage(JSON.parse(e.data)); } catch (_) {}
+      };
+      ws.onclose = () => {
+        clearInterval(pingTimer);
+        onStatus && onStatus(false);
+        if (alive) {
+          retry = Math.min(retry + 1, 6);
+          setTimeout(open, retry * 1500);
+        }
+      };
+      ws.onerror = () => ws.close();
+    }
+    open();
+    return { close: () => { alive = false; ws && ws.close(); } };
+  }
+
+  return { get, post, getToken, setToken, connectWS, base };
+})();
+
+/* ---------- Shared visual utilities ---------- */
+PWIN.util = (function () {
+  const ICON = {
+    clear: "☀️", "partly-cloudy": "⛅", cloudy: "☁️", fog: "🌫️",
+    drizzle: "🌦️", rain: "🌧️", "rain-heavy": "⛈️", showers: "🌦️",
+    thunder: "⛈️", snow: "❄️", windy: "💨",
+  };
+  const SEV_COLOR = {
+    info: "#0284c7", advisory: "#059669", watch: "#d97706",
+    warning: "#ea580c", critical: "#e11d48",
+  };
+  const RISK_COLOR = {
+    low: "#059669", moderate: "#d97706", high: "#ea580c",
+    severe: "#e11d48", extreme: "#be123c",
+  };
+  const SEV_RANK = { info: 0, advisory: 1, watch: 2, warning: 3, critical: 4 };
+
+  const iconEmoji = (i) => ICON[i] || "🌡️";
+  const sevColor = (s) => SEV_COLOR[s] || "#64748b";
+  const riskColor = (r) => RISK_COLOR[r] || "#64748b";
+  const sevRank = (s) => SEV_RANK[s] ?? 0;
+
+  function fmtTime(iso) {
+    if (!iso) return "—";
+    const d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  }
+  function fmtAgo(iso) {
+    if (!iso) return "–";
+    const diff = (Date.now() - new Date(iso).getTime()) / 1000;
+    if (isNaN(diff)) return iso;
+    if (diff < 60) return "just now";
+    if (diff < 3600) return Math.floor(diff / 60) + "m ago";
+    return Math.floor(diff / 3600) + "h ago";
+  }
+  function round(v, d = 0) {
+    if (v === null || v === undefined || isNaN(v)) return "–";
+    return Number(v).toFixed(d);
+  }
+  function titleCase(s) {
+    return (s || "").replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+  }
+  function tempColor(t) {
+    if (t === null || t === undefined) return "#64748b";
+    if (t >= 37) return "#dc2626";
+    if (t >= 33) return "#ea580c";
+    if (t >= 29) return "#d97706";
+    if (t >= 24) return "#059669";
+    if (t >= 18) return "#0284c7";
+    return "#4f46e5";
+  }
+
+  return { iconEmoji, sevColor, riskColor, sevRank, fmtTime, fmtAgo, round, titleCase, tempColor };
+})();
+
+/* =====================================================================
+   PWIN AI — Clean SVG weather icon set (replaces emojis)
+   Keyed by WMO weather code or by an "icon hint" string.
+   ===================================================================== */
+window.PWIN = window.PWIN || {};
+
+PWIN.wx = (function () {
+  const COL = {
+    sun: "#f59e0b", cloud: "#94a3b8", cloudDark: "#64748b",
+    rain: "#3b82f6", rainHeavy: "#2563eb", snow: "#7dd3fc", bolt: "#f59e0b",
+  };
+
+  const wrap = (inner) =>
+    `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;
+
+  // Composite cloud (reliable across browsers — circles + rounded base)
+  const cloud = (c) =>
+    `<g fill="${c}"><circle cx="8.5" cy="13" r="3.4"/><circle cx="12.5" cy="11" r="4.3"/>` +
+    `<circle cx="16" cy="13.2" r="3"/><rect x="7" y="13" width="9.6" height="4.2" rx="2.1"/></g>`;
+
+  const rays = (c) =>
+    `<g stroke="${c}" stroke-width="2" stroke-linecap="round">` +
+    `<line x1="12" y1="1.8" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22.2"/>` +
+    `<line x1="1.8" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22.2" y2="12"/>` +
+    `<line x1="4.6" y1="4.6" x2="6.2" y2="6.2"/><line x1="17.8" y1="17.8" x2="19.4" y2="19.4"/>` +
+    `<line x1="19.4" y1="4.6" x2="17.8" y2="6.2"/><line x1="6.2" y1="17.8" x2="4.6" y2="19.4"/></g>`;
+
+  const drops = (c, w) =>
+    `<g stroke="${c}" stroke-width="${w || 2}" stroke-linecap="round">` +
+    `<line x1="8.5" y1="18.6" x2="7.5" y2="21.4"/><line x1="12" y1="18.6" x2="11" y2="21.4"/>` +
+    `<line x1="15.5" y1="18.6" x2="14.5" y2="21.4"/></g>`;
+
+  const ICONS = {
+    clear: wrap(`${rays(COL.sun)}<circle cx="12" cy="12" r="4.6" fill="${COL.sun}"/>`),
+    "partly-cloudy": wrap(
+      `<circle cx="8" cy="8" r="3.1" fill="${COL.sun}"/>` +
+      `<g stroke="${COL.sun}" stroke-width="1.6" stroke-linecap="round">` +
+      `<line x1="8" y1="2.4" x2="8" y2="3.6"/><line x1="2.4" y1="8" x2="3.6" y2="8"/>` +
+      `<line x1="4" y1="4" x2="4.9" y2="4.9"/><line x1="12" y1="4" x2="11.1" y2="4.9"/></g>` +
+      cloud(COL.cloud)
+    ),
+    cloudy: wrap(cloud(COL.cloud)),
+    fog: wrap(
+      cloud(COL.cloud) +
+      `<g stroke="#cbd5e1" stroke-width="2" stroke-linecap="round">` +
+      `<line x1="6" y1="20" x2="14" y2="20"/><line x1="16" y1="20" x2="19" y2="20"/></g>`
+    ),
+    drizzle: wrap(
+      cloud(COL.cloud) +
+      `<g stroke="${COL.rain}" stroke-width="2" stroke-linecap="round">` +
+      `<line x1="9.5" y1="18.6" x2="9" y2="20.4"/><line x1="13" y1="18.6" x2="12.5" y2="20.4"/></g>`
+    ),
+    rain: wrap(cloud(COL.cloud) + drops(COL.rain)),
+    "rain-heavy": wrap(cloud(COL.cloudDark) + drops(COL.rainHeavy, 2.4)),
+    thunder: wrap(
+      cloud(COL.cloudDark) +
+      `<path d="M12.8 17.2l-3.2 4.2h2.3l-1 3 4-5.2h-2.5l1.4-2z" fill="${COL.bolt}"/>`
+    ),
+    snow: wrap(
+      cloud(COL.cloud) +
+      `<g fill="${COL.snow}"><circle cx="9" cy="19.6" r="1.1"/><circle cx="13" cy="19.6" r="1.1"/>` +
+      `<circle cx="11" cy="21.6" r="1.1"/></g>`
+    ),
+    windy: wrap(
+      `<g stroke="${COL.cloudDark}" stroke-width="2" stroke-linecap="round" fill="none">` +
+      `<path d="M3 9h9a2.4 2.4 0 1 0-2.4-2.4"/><path d="M3 13h13a2.4 2.4 0 1 1-2.4 2.4"/>` +
+      `<path d="M3 17h7"/></g>`
+    ),
+  };
+  ICONS.showers = ICONS.rain;
+
+  function hintFromCode(code) {
+    if (code === null || code === undefined) return "cloudy";
+    if ([0, 1].includes(code)) return "clear";
+    if (code === 2) return "partly-cloudy";
+    if (code === 3) return "cloudy";
+    if ([45, 48].includes(code)) return "fog";
+    if ([51, 53, 55, 56, 57].includes(code)) return "drizzle";
+    if ([61, 63, 80, 81].includes(code)) return "rain";
+    if ([65, 66, 67, 82].includes(code)) return "rain-heavy";
+    if ([71, 73, 75, 77, 85, 86].includes(code)) return "snow";
+    if ([95, 96, 99].includes(code)) return "thunder";
+    return "cloudy";
+  }
+
+  const byHint = (h) => ICONS[h] || ICONS.cloudy;
+  const byCode = (c) => ICONS[hintFromCode(c)] || ICONS.cloudy;
+  return { byHint, byCode, hintFromCode };
+})();
+
+/* =====================================================================
+   PWIN AI — Leaflet map module
+   Dark basemap + province status markers + RainViewer radar + temp layer
+   ===================================================================== */
+window.PWIN = window.PWIN || {};
+
+PWIN.map = (function () {
+  let map, markerLayer, heatLayer, radarLayer, labelLayer, cloudsLayer;
+  let baseLayers = {}, activeBase = "light", refLayer = null, mbToken = "";
+  let markersByName = {};
+  let onSelect = null;
+  let onPopupOpen = null;
+  let showLabels = false;
+
+  // Free, no-key tile sources (CARTO + Esri).
+  function makeBase(name) {
+    switch (name) {
+      case "dark":
+        return L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+          { subdomains: "abcd", maxZoom: 19 });
+      case "satellite":
+        return L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+          { maxZoom: 19, attribution: "Imagery © Esri" });
+      case "terrain":
+        return L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
+          { maxZoom: 19, attribution: "© Esri" });
+      case "light":
+      default:
+        return L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+          { subdomains: "abcd", maxZoom: 19 });
+    }
+  }
+
+  function init(center, mapboxToken) {
+    map = L.map("map", {
+      center: [center.lat, center.lon],
+      zoom: center.zoom || 6,
+      zoomControl: false,
+      attributionControl: false,
+      worldCopyJump: true,
+    });
+    L.control.zoom({ position: "bottomright" }).addTo(map);
+
+    mbToken = mapboxToken || "";
+    baseLayers.light = makeBase("light");
+    baseLayers.light.addTo(map);
+    activeBase = "light";
+
+    markerLayer = L.layerGroup().addTo(map);
+    heatLayer = L.layerGroup();
+    labelLayer = L.layerGroup();
+    return map;
+  }
+
+  function setBaseMap(name) {
+    if (!map || name === activeBase) return;
+    if (baseLayers[activeBase]) map.removeLayer(baseLayers[activeBase]);
+    if (!baseLayers[name]) baseLayers[name] = makeBase(name);
+    baseLayers[name].addTo(map);
+    baseLayers[name].bringToBack();
+    activeBase = name;
+
+    // Add place-name + boundary reference overlay over raw satellite imagery.
+    if (name === "satellite") {
+      if (!refLayer) {
+        refLayer = L.tileLayer(
+          "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
+          { maxZoom: 19, zIndex: 350 }
+        );
+      }
+      refLayer.addTo(map);
+    } else if (refLayer) {
+      map.removeLayer(refLayer);
+    }
+  }
+
+  // Clouds (IR) — live geostationary infrared from NASA GIBS.
+  // Himawari-9 AHI Band 13 (Clean IR, ~10.4µm) covers the Philippines and is
+  // refreshed every 10 minutes; cold (high) cloud tops are colour-enhanced so
+  // deep convection / thunderstorms stand out. (RainViewer's IR product was
+  // discontinued — its `satellite.infrared` feed now returns no frames.)
+  const GIBS_IR_LAYER = "Himawari_AHI_Band13_Clean_Infrared";
+  const GIBS_IR_MATRIX = "GoogleMapsCompatible_Level6"; // tiles exist to z6
+  let cloudsTimer = null;
+
+  // Resolve the latest available IR timestamp from GIBS DescribeDomains so the
+  // UI can show "as of HH:MM" and so we pin a concrete frame (more reliable
+  // than the `default` keyword if a frame is still publishing).
+  async function gibsLatestIRTime() {
+    try {
+      const r = await fetch(
+        "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/1.0.0/" +
+        GIBS_IR_LAYER + "/default/" + GIBS_IR_MATRIX + "/all/all.xml",
+        { cache: "no-store" }
+      );
+      if (!r.ok) return null;
+      const txt = await r.text();
+      // The time dimension is a single <Domain> holding a comma-separated list
+      // of "<start>/<end>/PT10M" intervals. Take the end of the last interval.
+      const m = txt.match(/<Domain>([^<]+)<\/Domain>/);
+      if (!m) return null;
+      const last = m[1].split(",").pop().trim();      // most recent interval
+      const parts = last.split("/");
+      const end = parts.length > 1 ? parts[1] : parts[0];
+      return end || null;
+    } catch (_) { return null; }
+  }
+
+  function buildCloudsLayer(timeStr) {
+    const t = timeStr || "default";
+    const url =
+      "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/" +
+      GIBS_IR_LAYER + "/default/" + t + "/" + GIBS_IR_MATRIX +
+      "/{z}/{y}/{x}.png";
+    return L.tileLayer(url, {
+      opacity: 0.62,
+      zIndex: 380,
+      maxNativeZoom: 6,      // GIBS only serves to z6; Leaflet upscales above
+      maxZoom: 19,
+      crossOrigin: true,
+      attribution: "IR: NASA GIBS · Himawari-9 AHI",
+      className: "gibs-ir-layer",
+    });
+  }
+
+  async function setClouds(on) {
+    if (cloudsTimer) { clearInterval(cloudsTimer); cloudsTimer = null; }
+    if (!on) {
+      if (cloudsLayer) { map.removeLayer(cloudsLayer); cloudsLayer = null; }
+      return null;
+    }
+    let when = await gibsLatestIRTime();
+    cloudsLayer = buildCloudsLayer(when).addTo(map);
+    // Auto-refresh the IR frame every 5 min so it stays current while shown.
+    cloudsTimer = setInterval(async () => {
+      if (!cloudsLayer) return;
+      const t = await gibsLatestIRTime();
+      const fresh = buildCloudsLayer(t).addTo(map);
+      fresh.once("load", () => { if (cloudsLayer) map.removeLayer(cloudsLayer); cloudsLayer = fresh; });
+      setTimeout(() => { if (cloudsLayer !== fresh && map.hasLayer(cloudsLayer)) { map.removeLayer(cloudsLayer); cloudsLayer = fresh; } }, 4000);
+    }, 5 * 60 * 1000);
+    return when ? new Date(when) : new Date();
+  }
+
+  function markerColor(m) {
+    if (m.affected) return PWIN.util.sevColor(m.severity);
+    if (m.is_raining) return "#38bdf8";
+    return PWIN.util.tempColor(m.temp);
+  }
+
+  function buildIcon(m) {
+    const color = markerColor(m);
+    const cls = "pwin-marker" + (m.affected ? " affected" : "");
+    const label = showLabels ? `<div class="m-label">${m.name}</div>` : "";
+    return L.divIcon({
+      className: "",
+      html: `<div class="${cls}" style="--c:${color}"><span class="m-dot"></span>${label}</div>`,
+      iconSize: [16, 16],
+      iconAnchor: [8, 8],
+    });
+  }
+
+  function popupHtml(m) {
+    const U = PWIN.util;
+    const sev = (m.severity || "info");
+    const sevC = U.sevColor(sev);
+    const riskC = U.riskColor(m.risk_level);
+    const icon = (PWIN.wx && m.icon) ? PWIN.wx.byHint(m.icon) : "";
+    const name = String(m.name).replace(/'/g, "\\'");
+    return `<div class="pop">
+      <div class="pop-hero">
+        <div class="pop-hero-l">
+          <div class="pop-ico">${icon}</div>
+          <div class="pop-hero-txt">
+            <h4>${m.name}</h4>
+            <div class="pop-cond">${m.condition_text || U.titleCase(m.event_type)}</div>
+          </div>
+        </div>
+        <div class="pop-temp" style="color:${U.tempColor(m.temp)}">${U.round(m.temp)}<span>°</span></div>
+      </div>
+      <div class="pop-pills">
+        <span class="pop-pill" style="--pc:${sevC}">${sev.toUpperCase()}</span>
+        <span class="pop-pill" style="--pc:${riskC}">RISK ${U.titleCase(m.risk_level)} · ${U.round(m.risk_score)}</span>
+        ${m.is_raining ? `<span class="pop-pill" style="--pc:#22D3EE">● RAINING</span>` : ``}
+      </div>
+      <div class="pop-grid">
+        <div class="pop-cell"><span class="pop-k">Event</span><span class="pop-v">${U.titleCase(m.event_type)}</span></div>
+        <div class="pop-cell pop-cell-wide"><span class="pop-k">Region</span><span class="pop-v" title="${String(m.region || "").replace(/"/g, "&quot;")}">${m.region || "—"}</span></div>
+      </div>
+      <button onclick="PWIN.app.selectProvince('${name}')">Open Intelligence
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>`;
+  }
+
+  function updateMarkers(markers, selectCb) {
+    if (selectCb) onSelect = selectCb;
+    markerLayer.clearLayers();
+    heatLayer.clearLayers();
+    markersByName = {};
+
+    markers.forEach((m) => {
+      const marker = L.marker([m.lat, m.lon], { icon: buildIcon(m) });
+      marker.bindPopup(popupHtml(m));
+      marker.on("click", () => map.panTo([m.lat, m.lon]));
+      // Opening a marker's popup should make the page ambiance match that
+      // province's actual weather (e.g. no rain fx over an overcast/dry place).
+      marker.on("popupopen", () => onPopupOpen && onPopupOpen(m));
+      marker.on("popupclose", () => onPopupOpen && onPopupOpen(null));
+      marker.addTo(markerLayer);
+      markersByName[m.name] = { marker, data: m };
+
+      // temperature overlay circle
+      const c = L.circleMarker([m.lat, m.lon], {
+        radius: 26,
+        stroke: false,
+        fillColor: PWIN.util.tempColor(m.temp),
+        fillOpacity: 0.18,
+      });
+      c.addTo(heatLayer);
+    });
+  }
+
+  function flyTo(lat, lon, zoom = 8) {
+    map && map.flyTo([lat, lon], zoom, { duration: 1.1 });
+  }
+
+  function openPopup(name) {
+    const entry = markersByName[name];
+    if (entry) entry.marker.openPopup();
+  }
+
+  // --- Layer toggles ---
+  function setMarkers(on) {
+    if (on) markerLayer.addTo(map); else map.removeLayer(markerLayer);
+  }
+  function setHeat(on) {
+    if (on) heatLayer.addTo(map); else map.removeLayer(heatLayer);
+  }
+  function setLabels(on) {
+    showLabels = on;
+    // rebuild icons to include/exclude labels
+    Object.values(markersByName).forEach(({ marker, data }) =>
+      marker.setIcon(buildIcon(data))
+    );
+  }
+
+  async function setRadar(on) {
+    if (!on) {
+      if (radarLayer) { map.removeLayer(radarLayer); radarLayer = null; }
+      return null;
+    }
+    try {
+      const meta = await fetch("https://api.rainviewer.com/public/weather-maps.json").then((r) => r.json());
+      const frames = (meta.radar && meta.radar.past) || [];
+      if (!frames.length) return null;
+      const last = frames[frames.length - 1];
+      const url = `${meta.host}${last.path}/256/{z}/{x}/{y}/4/1_1.png`;
+      radarLayer = L.tileLayer(url, { opacity: 0.6, zIndex: 400 }).addTo(map);
+      return new Date(last.time * 1000);
+    } catch (e) {
+      console.warn("Radar unavailable", e);
+      return null;
+    }
+  }
+
+  function refresh() { if (map) map.invalidateSize(); }
+
+  function onPopup(cb) { onPopupOpen = cb; }
+
+  return { init, updateMarkers, flyTo, openPopup, onPopup, setMarkers, setHeat, setLabels, setRadar, setBaseMap, setClouds, refresh };
+})();
+
+/* =====================================================================
+   PWIN AI — Chart.js wrappers (24h outlook)
+   ===================================================================== */
+window.PWIN = window.PWIN || {};
+
+PWIN.charts = (function () {
+  let hourly;
+
+  function renderHourly(canvasId, data) {
+    const el = document.getElementById(canvasId);
+    if (!el) return;
+    const labels = data.map((h) =>
+      new Date(h.time).toLocaleTimeString([], { hour: "2-digit" })
+    );
+    const temps = data.map((h) => h.temp_c);
+    const prob = data.map((h) => h.precip_prob || 0);
+
+    if (hourly) hourly.destroy();
+    const ctx = el.getContext("2d");
+    const grad = ctx.createLinearGradient(0, 0, 0, 160);
+    grad.addColorStop(0, "rgba(37,99,235,0.30)");
+    grad.addColorStop(1, "rgba(37,99,235,0.02)");
+
+    const gridColor = "rgba(15,23,42,0.06)";
+    const tickColor = "#64748b";
+
+    hourly = new Chart(ctx, {
+      data: {
+        labels,
+        datasets: [
+          {
+            type: "line",
+            label: "Temp °C",
+            data: temps,
+            borderColor: "#4f46e5",
+            backgroundColor: grad,
+            fill: true,
+            tension: 0.45,
+            pointRadius: 0,
+            pointHoverRadius: 6,
+            pointHoverBackgroundColor: "#4f46e5",
+            borderWidth: 3,
+            yAxisID: "y",
+          },
+          {
+            type: "bar",
+            label: "Rain %",
+            data: prob,
+            backgroundColor: "rgba(14,165,233,0.55)",
+            hoverBackgroundColor: "rgba(14,165,233,0.85)",
+            borderRadius: 6,
+            yAxisID: "y1",
+            maxBarThickness: 12,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: "index", intersect: false },
+        plugins: {
+          legend: { labels: { color: tickColor, boxWidth: 10, font: { size: 10 } } },
+          tooltip: {
+            backgroundColor: "rgba(255,255,255,0.96)",
+            titleColor: "#0f172a",
+            bodyColor: "#334155",
+            borderColor: "rgba(15,23,42,0.12)",
+            borderWidth: 1,
+            padding: 12,
+            cornerRadius: 12,
+            titleFont: { size: 13, weight: 'bold' },
+            bodyFont: { size: 12 },
+            boxPadding: 4,
+            usePointStyle: true,
+            callbacks: {
+              label: function(context) {
+                let label = context.dataset.label || '';
+                if (label) { label += ': '; }
+                if (context.parsed.y !== null) {
+                  label += context.parsed.y + (context.dataset.label.includes('Rain') ? '%' : '°C');
+                }
+                return label;
+              }
+            }
+          },
+        },
+        scales: {
+          x: { grid: { color: gridColor }, ticks: { color: tickColor, font: { size: 9 }, maxTicksLimit: 8 } },
+          y: { position: "left", grid: { color: gridColor }, ticks: { color: tickColor, font: { size: 9 } } },
+          y1: { position: "right", min: 0, max: 100, grid: { display: false }, ticks: { color: "#0891b2", font: { size: 9 }, callback: (v) => v + "%" } },
+        },
+      },
+    });
+  }
+
+  return { renderHourly };
+})();
+
+/* =====================================================================
+   PWIN AI — Application controller
+   Wires the map, panels, search, AI query, alerts and live WebSocket feed.
+   ===================================================================== */
+window.PWIN = window.PWIN || {};
+
+PWIN.app = (function () {
+  const $ = (id) => document.getElementById(id);
+  const U = PWIN.util;
+
+  let markers = [];
+  let national = {};
+  let alerts = [];
+  let selected = null;
+  let lastRefresh = null;
+  let config = { center: { lat: 12.8797, lon: 121.774, zoom: 6 }, ai_engine: "rule-engine" };
+  let searchTimer = null;
+
+  // =====================================================================
+  //  Init
+  // =====================================================================
+  async function init() {
+    // Safety net: never let the boot screen trap the user. If anything below
+    // throws (e.g. a CDN failed to load) or stalls, dismiss boot anyway.
+    const bootSafety = setTimeout(finishBoot, 6000);
+
+    try {
+      setClock();
+      setInterval(setClock, 1000);
+      setInterval(() => { if (lastRefresh) $("updatedMeta").textContent = "updated " + U.fmtAgo(lastRefresh); }, 15000);
+
+      try { config = await PWIN.api.get("/api/config"); } catch (e) { console.warn(e); }
+      applyConfig();
+
+      PWIN.map.init(config.center, config.mapbox_token);
+      bindEvents();
+
+      // Make the page ambiance follow whichever province popup is open.
+      PWIN.map.onPopup((m) => {
+        if (m) setMood(provinceMood(m, { event_type: m.event_type }));
+        else if (!selected) setMood(nationalMood());
+      });
+
+      try { await loadAll(); } catch (e) { console.warn("Initial load:", e); }
+      connectWS();
+      fillDefaultTimeline();
+
+      // If first server refresh hasn't finished, retry once shortly.
+      if (!markers.length) setTimeout(() => loadAll().then(fillDefaultTimeline).catch(() => {}), 5000);
+    } catch (e) {
+      console.error("Init failed:", e);
+      toast("Some components failed to load — retrying live data.");
+    } finally {
+      clearTimeout(bootSafety);
+      finishBoot();
+    }
+  }
+
+  function applyConfig() {
+    document.title = `${config.app_short || "PWIN AI"} — Philippine Weather Intelligence`;
+    $("aiBadge").textContent = "AI engine: " + (config.ai_engine || "rule-engine");
+  }
+
+  let booted = false;
+  function finishBoot() {
+    if (booted) return;
+    booted = true;
+    const boot = $("boot");
+    $("bootText").textContent = "Weather intelligence online";
+    // Adding `.done` triggers the entrance choreography in the Visual
+    // Enhancement layer below (patchBoot observes this class), so we don't
+    // duplicate the panel tweens here — that would create competing animations.
+    setTimeout(() => boot.classList.add("done"), 500);
+  }
+
+  // =====================================================================
+  //  Data loading
+  // =====================================================================
+  async function loadAll() {
+    const [mapData, al] = await Promise.all([
+      PWIN.api.get("/api/map"),
+      PWIN.api.get("/api/alerts"),
+    ]);
+    markers = mapData.markers || [];
+    national = mapData.national || {};
+    alerts = al.alerts || [];
+    lastRefresh = mapData.last_refresh;
+    renderAll();
+  }
+
+  function renderAll() {
+    renderTopbar();
+    renderStats();
+    applyWeatherMood();
+    PWIN.map.updateMarkers(markers, selectProvince);
+    renderProvinceList();
+    renderAffected();
+    renderAlerts();
+    renderNationalBody();
+    if (selected) markActiveInList(selected);
+  }
+
+  // Set the body weather mood (drives bg gradient, orbs, rain/sun fx).
+  function setMood(mood) {
+    if (document.body.dataset.weather !== mood) document.body.dataset.weather = mood;
+  }
+
+  // National ambiance — used when no province is selected (overview).
+  function nationalMood() {
+    const n = national || {};
+    const total = n.provinces_total || markers.length || 0;
+    const ratio = total ? (n.provinces_raining || 0) / total : 0;
+    const sev = n.highest_severity || "info";
+    let mood = "clear";
+    if (sev === "critical" || sev === "warning") mood = "stormy";
+    else if (ratio >= 0.33) mood = "rainy";
+    else if (ratio >= 0.12 || (n.provinces_affected || 0) >= total * 0.45) mood = "cloudy";
+    return mood;
+  }
+
+  // Derive a mood from ONE province's actual conditions, so the background
+  // matches the place you're looking at (no rain fx over a dry/clear province).
+  function provinceMood(c = {}, ev = {}) {
+    const icon = c.icon || "";
+    const evType = ev.event_type || "";
+    if (icon === "thunder" || evType === "thunderstorm") return "stormy";
+    // Only show rain ambiance if it's actually raining there.
+    if (c.is_raining || ["rain", "rain-heavy", "showers", "drizzle"].includes(icon)
+        || ["heavy_rain", "moderate_rain", "light_rain"].includes(evType)) {
+      const heavy = c.rain_intensity && /heavy|intense|torrential|very/i.test(c.rain_intensity);
+      return heavy ? "stormy" : "rainy";
+    }
+    if (["cloudy", "fog", "partly-cloudy"].includes(icon)) return "cloudy";
+    return "clear";
+  }
+
+  function applyWeatherMood() {
+    // If a province is selected, its detail drives the mood instead (set in
+    // renderDetail). Here we only own the national/overview ambiance.
+    if (!selected) setMood(nationalMood());
+    const ico = document.getElementById("natIco");
+    if (ico && window.PWIN.wx) {
+      const hint = { stormy: "thunder", rainy: "rain", cloudy: "cloudy", clear: "clear" }[nationalMood()];
+      ico.innerHTML = PWIN.wx.byHint(hint);
+    }
+  }
+
+  // =====================================================================
+  //  Top bar + stats
+  // =====================================================================
+  function renderTopbar() {
+    $("natHeadlineText").textContent = national.headline || "Monitoring nationwide weather…";
+    if (lastRefresh) $("updatedMeta").textContent = "updated " + U.fmtAgo(lastRefresh);
+  }
+
+  function renderStats() {
+    $("statRaining").textContent = national.provinces_raining ?? "–";
+    $("statAffected").textContent = national.provinces_affected ?? "–";
+    $("statAlerts").textContent = national.active_alerts ?? alerts.length ?? "–";
+    $("statTemp").textContent = national.avg_temp_c != null ? U.round(national.avg_temp_c, 1) : "–";
+    const sev = national.highest_severity || "info";
+    const el = $("statSeverity");
+    el.textContent = sev.toUpperCase();
+    el.style.color = U.sevColor(sev);
+  }
+
+  function renderNationalBody() {
+    $("natBody").textContent = national.body || "First data refresh in progress…";
+    $("aiBadge").textContent = "AI engine: " + (national.engine || config.ai_engine || "rule-engine");
+    const hp = $("natHeadlinePanel");
+    if (hp) hp.textContent = national.headline || "Monitoring nationwide weather…";
+    const up = $("ovUpdated");
+    if (up) up.textContent = national.generated_at ? "as of " + U.fmtTime(national.generated_at) + " PHT" : "";
+    const chips = $("ovChips");
+    if (chips) {
+      const top = (national.top_affected || []).slice(0, 4);
+      chips.innerHTML = top.length
+        ? `<span class="ov-chip lbl">Most affected</span>` +
+          top.map((p) => `<span class="ov-chip" data-name="${esc(p.name)}">${p.name}</span>`).join("")
+        : "";
+      chips.querySelectorAll(".ov-chip[data-name]").forEach((el) =>
+        el.addEventListener("click", () => selectProvince(el.dataset.name)));
+    }
+  }
+
+  // =====================================================================
+  //  Province list (left)
+  // =====================================================================
+  function filteredMarkers() {
+    const sev = $("filterSeverity").value;
+    const ev = $("filterEvent").value;
+    const affOnly = $("filterAffected").checked;
+    let list = markers.slice();
+    if (affOnly) list = list.filter((m) => m.affected);
+    if (sev) list = list.filter((m) => m.affected && U.sevRank(m.severity) >= U.sevRank(sev));
+    if (ev) list = list.filter((m) => m.event_type === ev);
+    list.sort((a, b) => (b.affected - a.affected) || (b.risk_score - a.risk_score) || a.name.localeCompare(b.name));
+    return list;
+  }
+
+  function renderProvinceList() {
+    const list = filteredMarkers();
+    $("listCount").textContent = list.length;
+    const html = list.map((m) => {
+      const color = m.affected ? U.sevColor(m.severity) : (m.is_raining ? "#38bdf8" : "#5b6b8c");
+      const tag = m.affected
+        ? `<span class="pl-tag" style="background:${color}22;color:${color}">${m.severity}</span>`
+        : (m.is_raining ? `<span class="pl-tag" style="background:#38bdf822;color:#38bdf8">rain</span>` : "");
+      return `<div class="pl-item${selected === m.name ? " active" : ""}" data-name="${esc(m.name)}">
+        <div class="pl-bg-icon" aria-hidden="true"></div>
+        <div class="pl-main">
+          <div class="pl-name">${m.name}</div>
+          <div class="pl-sub">${m.region} · ${U.titleCase(m.event_type)}</div>
+        </div>
+        <div class="pl-right">
+          <div class="pl-temp" style="color:${U.tempColor(m.temp)}">${U.round(m.temp)}°</div>
+          ${tag}
+        </div>
+      </div>`;
+    }).join("");
+    $("provinceList").innerHTML = html || `<div class="empty-note">No provinces match filters.</div>`;
+    $("provinceList").querySelectorAll(".pl-item").forEach((el) =>
+      el.addEventListener("click", () => selectProvince(el.dataset.name))
+    );
+    if (window.gsap && html) {
+      gsap.fromTo(".pl-item", { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.4, stagger: 0.03, ease: "power2.out" });
+    }
+  }
+
+  function markActiveInList(name) {
+    document.querySelectorAll(".pl-item").forEach((el) =>
+      el.classList.toggle("active", el.dataset.name === name)
+    );
+  }
+
+  // =====================================================================
+  //  Affected + alerts tabs
+  // =====================================================================
+  function renderAffected() {
+    const aff = national.top_affected || [];
+    $("affCount").textContent = national.provinces_affected ?? aff.length;
+    if (!aff.length) { $("affectedList").innerHTML = `<div class="empty-note">No provinces are currently flagged.</div>`; return; }
+    $("affectedList").innerHTML = aff.map((p) => {
+      const color = U.sevColor(p.severity);
+      return `<div class="aff-card" style="border-left-color:${color}" data-name="${esc(p.name)}">
+        <div class="aff-top">
+          <div><div class="aff-name">${p.name}</div><div class="aff-region">${p.region}</div></div>
+          <div style="text-align:right"><span class="badge" style="background:${color}22;color:${color}">${p.severity}</span></div>
+        </div>
+        <div class="aff-meta">
+          <span class="aff-pill">${U.titleCase(p.event_type)}</span>
+          <span class="aff-pill">Rain: ${p.rain_intensity}</span>
+          <span class="aff-pill" style="color:${U.riskColor(p.risk_level)}">Risk: ${U.titleCase(p.risk_level)} ${U.round(p.risk_score)}</span>
+        </div>
+        <div class="aff-summary">${p.impact_summary || ""}</div>
+        <div class="aff-meta">
+          <span class="aff-pill">${p.cause}</span>
+          <span class="aff-pill">${U.fmtTime(p.started_at)} → ${U.fmtTime(p.expected_end)}</span>
+        </div>
+      </div>`;
+    }).join("");
+    $("affectedList").querySelectorAll(".aff-card").forEach((el) =>
+      el.addEventListener("click", () => selectProvince(el.dataset.name))
+    );
+  }
+
+  function renderAlerts() {
+    $("alertCount").textContent = alerts.length;
+    if (!alerts.length) { $("alertsList").innerHTML = `<div class="empty-note">No active alerts. Conditions nominal.</div>`; return; }
+    $("alertsList").innerHTML = alerts.map((a) => {
+      const color = U.sevColor(a.severity);
+      return `<div class="alert-card" style="border-left-color:${color}" data-name="${esc(a.province || "")}">
+        <div class="aff-top">
+          <div class="a-title">${a.title}</div>
+          <span class="badge" style="background:${color}22;color:${color}">${a.severity}</span>
+        </div>
+        <div class="a-reason">${a.reason || ""}</div>
+        <div class="a-action">${a.recommended_action || ""}</div>
+        <div class="a-time">Issued ${U.fmtTime(a.issued_at)} · Expires ${U.fmtTime(a.expires_at)} · ${a.source}</div>
+      </div>`;
+    }).join("");
+    $("alertsList").querySelectorAll(".alert-card").forEach((el) =>
+      el.addEventListener("click", () => el.dataset.name && selectProvince(el.dataset.name))
+    );
+  }
+
+  // =====================================================================
+  //  Province detail (intelligence)
+  // =====================================================================
+  async function selectProvince(name) {
+    if (!name) return;
+    selected = name;
+    switchTab("intel");
+    markActiveInList(name);
+    // On phones the right panel is an overlay — reveal it on selection.
+    document.body.classList.add("mobile-detail");
+    try {
+      const d = await PWIN.api.get("/api/province/" + encodeURIComponent(name));
+      renderDetail(d);
+      PWIN.map.flyTo(d.lat, d.lon, 8);
+      PWIN.map.openPopup(name);
+      fillTimeline(d.forecast?.hourly || [], name);
+    } catch (e) {
+      toast("Could not load " + name);
+      console.warn(e);
+    }
+  }
+
+  function renderDetail(d) {
+    $("intelEmpty").classList.add("hidden");
+    $("intelDetail").classList.remove("hidden");
+    if (window.gsap) gsap.fromTo("#intelDetail", { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out" });
+    const c = d.condition || {};
+    const ev = d.event || {};
+    const ex = d.explanation || {};
+
+    $("pvName").textContent = d.name;
+    $("pvRegion").textContent = d.region + (d.capital ? " · " + d.capital : "");
+    $("pvIcon").innerHTML = PWIN.wx.byHint(c.icon);
+    // weather-reactive scene background for the detail panel
+    $("intelDetail").dataset.cond = c.icon || "clear";
+    // Drive the whole-page ambiance from THIS province's real conditions so the
+    // rain/sun fx match the place being viewed (not the national average).
+    setMood(provinceMood(c, ev));
+    $("pvTemp").textContent = U.round(c.temperature_c) + "°";
+    $("pvTemp").style.color = U.tempColor(c.temperature_c);
+    $("pvCondText").textContent = c.condition_text || "";
+
+    const badges = [];
+    if (ev.severity) badges.push(badge(ev.severity.toUpperCase(), U.sevColor(ev.severity)));
+    if (c.rain_intensity && c.rain_intensity !== "none") badges.push(badge("Rain: " + c.rain_intensity, "#38bdf8"));
+    if (ev.risk_level) badges.push(badge("Risk: " + U.titleCase(ev.risk_level), U.riskColor(ev.risk_level)));
+    if (ev.confidence != null) badges.push(badge("Confidence " + Math.round(ev.confidence * 100) + "%", "#8b5cf6"));
+    if (c.is_raining) badges.push(badge("● Raining now", "#38bdf8"));
+    $("pvBadges").innerHTML = badges.join("");
+
+    $("pvMetrics").innerHTML = [
+      metric("Feels Like", U.round(c.feels_like_c) + "°C"),
+      metric("Humidity", U.round(c.humidity_pct) + "%"),
+      metric("Wind", U.round(c.wind_speed_kmh) + " <small>km/h " + (c.wind_dir_label || "") + "</small>"),
+      metric("Gusts", U.round(c.wind_gust_kmh) + " <small>km/h</small>"),
+      metric("Pressure", U.round(c.pressure_hpa) + " <small>hPa</small>"),
+      metric("Visibility", U.round(c.visibility_km) + " <small>km</small>"),
+      metric("UV Index", U.round(c.uv_index)),
+      metric("Cloud Cover", U.round(c.cloud_cover_pct) + "%"),
+      metric("Chance of Rain", U.round(c.precip_prob_pct) + "%"),
+      metric("Precip", U.round(c.precip_mm, 1) + " <small>mm</small>"),
+    ].join("");
+
+    $("pvQA").innerHTML = [
+      qa("What", ex.what),
+      qa("Where", ex.where),
+      qa("When it started", ex.when_started),
+      qa("When it may end", ex.when_end),
+      qa("Why", ex.why),
+      qa("Who is affected", ex.who),
+      qa("How severe", ex.how_severe),
+      qa("AI Analysis", ex.analysis),
+    ].join("");
+
+    const prec = ex.precautions || [];
+    $("pvPrecautions").innerHTML = prec.length
+      ? prec.map((p) => `<li>${p}</li>`).join("")
+      : `<li>No special precautions needed.</li>`;
+
+    PWIN.charts.renderHourly("hourlyChart", d.forecast?.hourly || []);
+    renderDaily(d.forecast?.daily || []);
+    $("forecastSummary").textContent = d.forecast_summary || "";
+  }
+
+  function renderDaily(daily) {
+    const days = daily.slice(0, 7);
+    const wMax = Math.max(...days.map(d => d.tmax));
+    const wMin = Math.min(...days.map(d => d.tmin));
+    const wRange = wMax - wMin || 1;
+
+    $("dailyStrip").innerHTML = days.map((day) => {
+      const dt = new Date(day.date);
+      const dname = dt.toLocaleDateString([], { weekday: "short" });
+      const leftPct = ((day.tmin - wMin) / wRange) * 100;
+      const widthPct = ((day.tmax - day.tmin) / wRange) * 100;
+      return `<div class="day">
+        <div class="d-name">${dname}</div>
+        <div class="d-ico">${PWIN.wx.byCode(day.code)}</div>
+        <div class="d-hi" style="color:${U.tempColor(day.tmax)}">${U.round(day.tmax)}°</div>
+        <div style="width:100%; height:4px; background:rgba(15,23,42,0.08); border-radius:2px; margin:4px 0; position:relative;">
+          <div style="position:absolute; left:${leftPct}%; width:${widthPct}%; height:100%; border-radius:2px; background:linear-gradient(90deg, ${U.tempColor(day.tmin)}, ${U.tempColor(day.tmax)});"></div>
+        </div>
+        <div class="d-lo">${U.round(day.tmin)}°</div>
+        <div class="d-rain">${U.round(day.precip_prob)}%</div>
+      </div>`;
+    }).join("");
+  }
+
+  function backToNational() {
+    selected = null;
+    $("intelDetail").classList.add("hidden");
+    $("intelEmpty").classList.remove("hidden");
+    markActiveInList(null);
+    document.body.classList.remove("mobile-detail");
+    // Restore the national overview ambiance.
+    setMood(nationalMood());
+  }
+
+  // =====================================================================
+  //  Bottom timeline
+  // =====================================================================
+  function fillTimeline(hourly, name) {
+    $("tlTitle").textContent = name ? `${name} — next ${hourly.length}h outlook` : "National hourly outlook";
+    $("hourlyStrip").innerHTML = hourly.map((h, i) => {
+      const t = new Date(h.time).toLocaleTimeString([], { hour: "2-digit" });
+      const prob = Math.max(0, Math.min(100, h.precip_prob || 0));
+      return `<div class="hour${i === 0 ? " now" : ""}">
+        <div class="h-time">${i === 0 ? "Now" : t}</div>
+        <div class="h-ico">${PWIN.wx.byCode(h.code)}</div>
+        <div class="h-temp" style="color:${U.tempColor(h.temp_c)}">${U.round(h.temp_c)}°</div>
+        <div class="h-rain">${U.round(h.precip_prob)}%</div>
+        <div class="h-bar"><i style="width:${prob}%"></i></div>
+      </div>`;
+    }).join("");
+    if (window.gsap && hourly.length) {
+      gsap.fromTo(".hour", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.4, stagger: 0.02, ease: "back.out(1.5)" });
+    }
+  }
+
+  async function fillDefaultTimeline() {
+    const name = (national.top_affected && national.top_affected[0]?.name)
+      || (markers[0] && markers[0].name);
+    if (!name) return;
+    try {
+      const fc = await PWIN.api.get("/api/forecast/" + encodeURIComponent(name));
+      fillTimeline(fc.hourly || [], name + " (most active)");
+    } catch (e) { /* ignore */ }
+  }
+
+  // =====================================================================
+  //  Search + AI query
+  // =====================================================================
+  function onSearchInput() {
+    clearTimeout(searchTimer);
+    const q = $("searchInput").value.trim();
+    if (!q) { $("searchResults").classList.remove("show"); return; }
+    searchTimer = setTimeout(async () => {
+      try {
+        const res = await PWIN.api.get("/api/search?q=" + encodeURIComponent(q));
+        const items = res.results || [];
+        $("searchResults").innerHTML = items.map((i) =>
+          `<div class="sr-item" data-type="${i.type}" data-name="${esc(i.name)}" data-prov="${esc(i.province || "")}" data-lat="${i.lat}" data-lon="${i.lon}">
+            <span>${i.name}</span><span class="sr-type">${i.type}</span></div>`
+        ).join("") || `<div class="sr-item"><span class="muted">No matches</span></div>`;
+        $("searchResults").classList.add("show");
+        $("searchResults").querySelectorAll(".sr-item").forEach((el) =>
+          el.addEventListener("click", () => onSearchPick(el.dataset))
+        );
+      } catch (e) { console.warn(e); }
+    }, 220);
+  }
+
+  function onSearchPick(d) {
+    $("searchResults").classList.remove("show");
+    $("searchInput").value = d.name;
+    if (d.type === "province") selectProvince(d.name);
+    else if (d.type === "city" && d.prov) { selectProvince(d.prov); PWIN.map.flyTo(+d.lat, +d.lon, 9); }
+    else PWIN.map.flyTo(+d.lat, +d.lon, d.type === "region" ? 7 : 9);
+  }
+
+  async function onAsk() {
+    const q = $("askInput").value.trim();
+    if (!q) return;
+    const box = $("askAnswer");
+    box.classList.remove("hidden");
+    box.textContent = "Thinking…";
+    try {
+      const res = await PWIN.api.post("/api/query", { question: q });
+      box.innerHTML = `${res.answer} <span class="muted small">(${res.engine})</span>`;
+      if (res.matched_provinces && res.matched_provinces.length) selectProvince(res.matched_provinces[0]);
+    } catch (e) {
+      box.textContent = "Could not process the question.";
+    }
+  }
+
+  // =====================================================================
+  //  Day-phase indicator (dynamic: night / sunrise / day / sunset)
+  // =====================================================================
+  const PHASE_SVG = {
+    day: `<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.6" fill="#f59e0b"/><g stroke="#f59e0b" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1.8" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22.2"/><line x1="1.8" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22.2" y2="12"/><line x1="4.6" y1="4.6" x2="6.2" y2="6.2"/><line x1="17.8" y1="17.8" x2="19.4" y2="19.4"/><line x1="19.4" y1="4.6" x2="17.8" y2="6.2"/><line x1="6.2" y1="17.8" x2="4.6" y2="19.4"/></g></svg>`,
+    night: `<svg viewBox="0 0 24 24"><path d="M20 13.5A8 8 0 1 1 10.5 4 6.3 6.3 0 0 0 20 13.5z" fill="#6366f1"/><circle cx="17" cy="6" r="1" fill="#a5b4fc"/><circle cx="20" cy="9.2" r="0.7" fill="#a5b4fc"/></svg>`,
+    sunrise: `<svg viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="19" x2="21" y2="19"/><path d="M7 19a5 5 0 0 1 10 0"/><polyline points="9 7 12 4 15 7"/></svg>`,
+    sunset: `<svg viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="19" x2="21" y2="19"/><path d="M7 19a5 5 0 0 1 10 0"/><polyline points="9 8 12 11 15 8"/></svg>`,
+  };
+  function phaseFor(h) {
+    if (h >= 5 && h < 7) return ["sunrise", "Sunrise"];
+    if (h >= 7 && h < 11) return ["day", "Morning"];
+    if (h >= 11 && h < 15) return ["day", "Midday"];
+    if (h >= 15 && h < 17) return ["day", "Afternoon"];
+    if (h >= 17 && h < 19) return ["sunset", "Sunset"];
+    return ["night", "Night"];
+  }
+
+  function updatePhase() {
+    let h = parseInt(new Date().toLocaleTimeString("en-PH",
+      { timeZone: "Asia/Manila", hour: "2-digit", hour12: false }), 10);
+    if (isNaN(h)) h = new Date().getHours();
+    const [key, label] = phaseFor(h);
+    const ico = $("phaseIco"), lbl = $("phaseLbl");
+    if (ico) ico.innerHTML = PHASE_SVG[key];
+    if (lbl) lbl.textContent = label;
+    document.body.dataset.phase = key;
+  }
+
+  // =====================================================================
+  //  WebSocket live updates
+  // =====================================================================
+  function connectWS() {
+    PWIN.api.connectWS(onWS, onStatus);
+  }
+  function onWS(msg) {
+    if (msg.provinces) markers = msg.provinces;
+    if (msg.national) national = msg.national;
+    if (msg.alerts) alerts = msg.alerts;
+    if (msg.last_refresh) lastRefresh = msg.last_refresh;
+    renderAll();
+  }
+  function onStatus(ok) {
+    $("connDot").className = "conn-dot " + (ok ? "on" : "off");
+    $("connText").textContent = ok ? "live" : "reconnecting…";
+  }
+
+  // =====================================================================
+  //  UI helpers
+  // =====================================================================
+  function switchTab(name) {
+    document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("active", t.dataset.tab === name));
+    document.querySelectorAll(".tab-pane").forEach((p) => p.classList.toggle("active", p.id === "tab-" + name));
+    if (window.gsap) gsap.fromTo("#tab-" + name, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" });
+  }
+
+  function bindEvents() {
+    $("searchInput").addEventListener("input", onSearchInput);
+    $("askBtn").addEventListener("click", onAsk);
+    $("askInput").addEventListener("keydown", (e) => e.key === "Enter" && onAsk());
+    $("filterSeverity").addEventListener("change", renderProvinceList);
+    $("filterEvent").addEventListener("change", renderProvinceList);
+    $("filterAffected").addEventListener("change", renderProvinceList);
+    $("backBtn").addEventListener("click", backToNational);
+    document.querySelectorAll(".tab").forEach((t) =>
+      t.addEventListener("click", () => switchTab(t.dataset.tab))
+    );
+
+    // Mouse wheel scrolls the hourly strip horizontally (vertical wheel → left/right).
+    // Attached once to the container; the inner cells are re-rendered freely.
+    const strip = $("hourlyStrip");
+    strip.addEventListener("wheel", (e) => {
+      // Use whichever axis the wheel reports; trackpads send deltaX, mice deltaY.
+      const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+      if (!delta) return;
+      const maxScroll = strip.scrollWidth - strip.clientWidth;
+      if (maxScroll <= 0) return;                 // nothing to scroll
+      // Only hijack vertical wheel when we can actually scroll in that direction,
+      // so the page/panel can still scroll at the ends.
+      const atStart = strip.scrollLeft <= 0;
+      const atEnd = strip.scrollLeft >= maxScroll - 1;
+      if ((delta < 0 && atStart) || (delta > 0 && atEnd)) return;
+      strip.scrollLeft += delta;
+      e.preventDefault();
+    }, { passive: false });
+    $("layerMarkers").addEventListener("change", (e) => PWIN.map.setMarkers(e.target.checked));
+    $("layerHeat").addEventListener("change", (e) => PWIN.map.setHeat(e.target.checked));
+    $("layerLabels").addEventListener("change", (e) => PWIN.map.setLabels(e.target.checked));
+    $("layerRadar").addEventListener("change", async (e) => {
+      const t = await PWIN.map.setRadar(e.target.checked);
+      $("radarTime").textContent = e.target.checked && t ? "Radar: " + U.fmtTime(t) : "";
+    });
+    $("layerClouds").addEventListener("change", async (e) => {
+      const on = e.target.checked;
+      if (on) toast("Loading cloud IR satellite…");
+      const t = await PWIN.map.setClouds(on);
+      if (on) {
+        toast(t ? "Clouds (IR) · Himawari-9 · " + U.fmtTime(t) : "Clouds layer unavailable");
+        $("radarTime").textContent = t ? "Clouds IR: " + U.fmtTime(t) : "";
+      } else if (!$("layerRadar").checked) {
+        $("radarTime").textContent = "";
+      }
+    });
+    // Base map selection via delegation (robust against re-render/timing)
+    document.addEventListener("click", (e) => {
+      const baseBtn = e.target.closest("[data-base]");
+      if (baseBtn) {
+        document.querySelectorAll("[data-base]").forEach((x) => x.classList.toggle("active", x === baseBtn));
+        PWIN.map.setBaseMap(baseBtn.dataset.base);
+        document.body.classList.toggle("map-dark", baseBtn.dataset.base === "dark" || baseBtn.dataset.base === "satellite");
+      }
+    });
+    // Minimize / expand the layers panel (persisted)
+    const setLayersMin = (min) => {
+      document.body.classList.toggle("layers-min", min);
+      try { localStorage.setItem("pwin_layers_min", min ? "1" : "0"); } catch (e) {}
+    };
+    $("layersCollapse").addEventListener("click", () => setLayersMin(true));
+    $("layersFab").addEventListener("click", () => setLayersMin(false));
+    if (localStorage.getItem("pwin_layers_min") === "1") document.body.classList.add("layers-min");
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".search-wrap")) $("searchResults").classList.remove("show");
+    });
+  }
+
+  function setClock() {
+    $("clock").textContent = new Date().toLocaleTimeString("en-PH", {
+      timeZone: "Asia/Manila", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false,
+    }) + " PHT";
+    updatePhase();
+  }
+
+  let toastTimer = null;
+  function toast(msg) {
+    const t = $("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove("show"), 2600);
+  }
+
+  const esc = (s) => String(s).replace(/"/g, "&quot;").replace(/</g, "&lt;");
+  const badge = (txt, color) => `<span class="badge" style="background:${color}22;color:${color}">${txt}</span>`;
+  const metric = (lbl, val) => `<div class="metric"><div class="m-lbl">${lbl}</div><div class="m-val">${val}</div></div>`;
+  const mdBold = (s) => String(s).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+  const qa = (q, a) => a
+    ? `<div class="qa-item${q === "AI Analysis" ? " qa-ai" : ""}"><div class="qa-q">${q}</div><div class="qa-a">${mdBold(a)}</div></div>`
+    : "";
+
+  return { init, selectProvince };
+})();
+
+window.addEventListener("DOMContentLoaded", PWIN.app.init);
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PWIN AI 2.0 — Visual Enhancement Systems
+   Particle ambient cloud · Canvas rain · Panel entrance · GSAP upgrades
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── Ambient Particle System ── */
+(function initParticles() {
+  const canvas = document.getElementById('particleCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function mkParticle(forceBottom) {
+    return {
+      x: Math.random() * W,
+      y: forceBottom ? H + 10 : Math.random() * H,
+      r: Math.random() * 1.4 + 0.4,
+      vx: (Math.random() - 0.5) * 0.25,
+      vy: -(Math.random() * 0.45 + 0.08),
+      alpha: Math.random() * 0.35 + 0.08,
+      life: 0,
+      maxLife: Math.random() * 400 + 250,
+      hue: Math.random() > 0.6 ? 200 : 210
+    };
+  }
+
+  for (let i = 0; i < 90; i++) particles.push(mkParticle(false));
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach((p, i) => {
+      p.x += p.vx; p.y += p.vy; p.life++;
+      const lf = p.life / p.maxLife;
+      const a = p.alpha * Math.sin(lf * Math.PI);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${p.hue},85%,75%,${a})`;
+      ctx.fill();
+      if (p.life >= p.maxLife || p.y < -10) particles[i] = mkParticle(true);
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ── Canvas Rain System ── */
+(function initRain() {
+  const canvas = document.getElementById('rainCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, drops = [];
+
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function mkDrop() {
+    return {
+      x: Math.random() * W,
+      y: Math.random() * H,
+      len: Math.random() * 22 + 10,
+      speed: Math.random() * 9 + 5,
+      alpha: Math.random() * 0.14 + 0.04
+    };
+  }
+  for (let i = 0; i < 220; i++) drops.push(mkDrop());
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    const weather = document.body.dataset.weather;
+    if (weather !== 'rainy' && weather !== 'stormy') { requestAnimationFrame(draw); return; }
+    ctx.lineWidth = 1;
+    drops.forEach(d => {
+      ctx.globalAlpha = d.alpha;
+      ctx.strokeStyle = 'rgba(147,210,255,1)';
+      ctx.beginPath();
+      ctx.moveTo(d.x, d.y);
+      ctx.lineTo(d.x - d.len * 0.14, d.y + d.len);
+      ctx.stroke();
+      d.y += d.speed;
+      if (d.y > H) { d.y = -d.len; d.x = Math.random() * W; }
+    });
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ── Enhanced GSAP entrance (override finishBoot animations) ── */
+(function patchBoot() {
+  const orig = window.addEventListener;
+  window.addEventListener('DOMContentLoaded', function() {
+    // Watch for boot completion and enhance animations
+    const bootObs = new MutationObserver(function(muts) {
+      muts.forEach(function(m) {
+        if (m.target.classList.contains('done') && window.gsap) {
+          // Stagger the panel entrance with spring physics
+          gsap.fromTo('.topbar',
+            { y: -90, opacity: 0, scale: 0.97 },
+            { y: 0, opacity: 1, scale: 1, duration: 1.3, ease: 'expo.out', delay: 0.05 });
+          gsap.fromTo('.panel-left',
+            { x: -70, opacity: 0, rotateY: -8 },
+            { x: 0, opacity: 1, rotateY: 0, duration: 1.3, ease: 'expo.out', delay: 0.25 });
+          gsap.fromTo('.panel-right',
+            { x: 70, opacity: 0, rotateY: 8 },
+            { x: 0, opacity: 1, rotateY: 0, duration: 1.3, ease: 'expo.out', delay: 0.4 });
+          gsap.fromTo('.timeline',
+            { y: 70, opacity: 0, scale: 0.96 },
+            { y: 0, opacity: 1, scale: 1, duration: 1.2, ease: 'expo.out', delay: 0.6 });
+          gsap.fromTo('#mapControls',
+            { opacity: 0, scale: 0.88, x: 20 },
+            { opacity: 1, scale: 1, x: 0, duration: 1, ease: 'back.out(1.3)', delay: 0.8 });
+          gsap.fromTo('#mapLegend',
+            { opacity: 0, scale: 0.88, x: -20 },
+            { opacity: 1, scale: 1, x: 0, duration: 1, ease: 'back.out(1.3)', delay: 1.0 });
+        }
+      });
+    });
+    const bootEl = document.getElementById('boot');
+    if (bootEl) bootObs.observe(bootEl, { attributes: true, attributeFilter: ['class'] });
+  });
+})();
+
+/* ── Province list hover tilt micro-interaction ── */
+document.addEventListener('mousemove', function(e) {
+  const item = e.target.closest('.pl-item');
+  if (!item || !window.gsap) return;
+  const rect = item.getBoundingClientRect();
+  const x = (e.clientX - rect.left) / rect.width - 0.5;
+  const y = (e.clientY - rect.top) / rect.height - 0.5;
+  gsap.to(item, { rotateX: -y * 3, rotateY: x * 5, scale: 1.01, duration: 0.3, ease: 'power2.out', transformPerspective: 600 });
+});
+document.addEventListener('mouseleave', function(e) {
+  const item = e.target.closest('.pl-item');
+  if (!item || !window.gsap) return;
+  gsap.to(item, { rotateX: 0, rotateY: 0, scale: 1, duration: 0.5, ease: 'elastic.out(1,0.7)' });
+}, true);
+
+/* ── Stat value glow on update ── */
+PWIN._flashStat = function(id, color) {
+  const el = document.getElementById(id);
+  if (!el || !window.gsap) return;
+  gsap.fromTo(el, { color: color || '#22D3EE', textShadow: '0 0 24px ' + (color || '#22D3EE') },
+    { color: '', textShadow: '', duration: 1.2, ease: 'power2.out' });
+};
+
+/* ── Hour hover lift for timeline ── */
+document.addEventListener('click', function(e) {
+  const hour = e.target.closest('.hour');
+  if (hour && window.gsap) {
+    gsap.fromTo(hour, { scale: 0.93 }, { scale: 1, duration: 0.5, ease: 'elastic.out(1,0.6)' });
+  }
+});
+
+/* ── Smooth alert card entrance ── */
+const _origRenderAlerts = typeof PWIN !== 'undefined' && PWIN.app ? null : null;
+document.addEventListener('DOMContentLoaded', function() {
+  // Observe alerts list for children added
+  const alertsObs = new MutationObserver(function() {
+    if (!window.gsap) return;
+    const cards = document.querySelectorAll('.aff-card, .alert-card');
+    gsap.fromTo(cards, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.4, stagger: 0.04, ease: 'power2.out' });
+  });
+  const aList = document.getElementById('affectedList');
+  const alList = document.getElementById('alertsList');
+  if (aList) alertsObs.observe(aList, { childList: true });
+  if (alList) alertsObs.observe(alList, { childList: true });
+});
+
+</script>
+</body>
+</html>
