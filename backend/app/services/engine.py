@@ -334,6 +334,7 @@ def _map_marker(snap: dict) -> dict:
         "risk_level": ev.get("risk_level", "low"),
         "risk_score": ev.get("risk_score", 0),
         "event_type": ev.get("event_type", "clear"),
+        "confidence": (snap.get("explanation") or {}).get("confidence", ev.get("confidence")),
     }
 
 
